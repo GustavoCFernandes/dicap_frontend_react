@@ -8,7 +8,7 @@ export async function listTeachers() {
     headers: headers,
   };
 
-  return fetch(`${process.env.REACT_APP_BASE_URL_BACKEND}/teachers`, options)
+  return fetch(`${process.env.REACT_APP_BASE_URL_BACKEND}/teachers/list`, options)
     .then((response) => {
       if (!response.ok) {
         throw new Error('Erro ao fbuscar lista de professores');
