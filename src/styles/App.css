@@ -1,0 +1,185 @@
+:root {
+    --principal-a: #0A0438;
+    --principal-b: #262A87;
+    --principal-c: #F7FBFF;
+    --Font_Light: #3A3969;
+    --select: #0A0438;
+    --hover-2: #EB1A21;
+    --fundo-1: #fff;
+    --fundo-2: #FDE7DC;
+    --fundo-3: #D3DCE9;
+}
+
+.icon-google {
+  width: 10px;
+}
+
+.App {
+  text-align: center;
+}
+
+.navbarStyle {
+  padding: .5rem 1rem !important
+}
+
+#calendar-content {
+  border-radius: 10px;
+  padding: 2rem;
+  margin-bottom: 10%;
+  color: rgb(59, 59, 59);
+  background-color: rgb(235, 233, 233);
+}
+
+.card-title {
+  padding: 5rem 1rem 0.3rem 1rem !important;
+}
+
+.card-title,
+.login-content,
+#card-teacher-content,
+#profile-data {
+  color: var(--principal-c);
+  background: linear-gradient(to left, var(--principal-b) 0%, var(--principal-a) 100%) !important;
+}
+
+.card-teacher{
+  background-color: #EB1A21 !important;
+}
+
+#btn-exit-content {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+#btn-back-choice-techaer-content  {
+  margin-top: 0.3rem;
+  position: absolute;
+  top: 0;
+  left: 13%;
+}
+
+#card-teacher-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 2rem;
+  min-height: 100vh;
+}
+
+#select-teacher {
+  width: 50%;
+}
+
+.login-content {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.login-form {
+    border-radius: 1rem;
+    padding: 2rem 10rem;
+    background-color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+.login-form div {
+  margin-bottom: 10px;
+}
+.login-form label {
+  margin-bottom: 5px;
+}
+.login-form input {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+h3 {
+  margin-top: 5px;
+  font-size: 1.7rem;
+  color: var(--principal-b);
+  text-align: center;
+}
+
+.login-form button {
+  padding: 10px;
+  background-color: var(--principal-b);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 100%;
+}
+.login-form button:hover {
+  background-color: #0056b3;
+}
+.login-form button:active {
+  background-color: #004085;
+}
+.btn-login button{
+    margin-top: 1rem;
+    width: 265px;
+}
+
+.btn-exit {
+ background-color: var(--principal-a);
+  color: var(--principal-c);
+  border: none;
+  border-radius: 4px;
+  padding: 8px 12px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-exit:hover {
+  background-color: var(--principal-c);
+  color: var(--principal-b);
+  transform: scale(1.05);
+}
+
+.btn-exit:active {
+  background-color: var(--Font_Light);
+  color: var(--principal-b);
+  transform: scale(0.95);
+}
+
+@media (max-width: 768px) {
+
+  #card-teacher-content {
+   padding-top: 2rem;
+  }
+
+  #calendar-content {
+    padding: 20px;
+    margin-bottom: 90%;
+  }
+
+  .fc {
+    font-size: 7px;
+  }
+
+  .fc .fc-toolbar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  #btn-back-choice-techaer-content  {
+    margin-top: 0rem;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+  .login-form {
+    padding: 2rem 1rem;
+}
+}
+
