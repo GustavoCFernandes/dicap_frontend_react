@@ -11,7 +11,7 @@ const ProfileData = (props) => {
       <BtnExit />
       <h2 className='card-title'>Agenda {props.graphData.displayName}</h2>
       <p> Email: {props.graphData.userPrincipalName} </p>
-      <div className='w-75 mx-auto'>
+      <div className='w-100 mx-auto'>
         <div className='p-3'>
           <Calendar />
         </div>
