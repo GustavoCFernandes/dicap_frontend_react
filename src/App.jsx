@@ -1,3 +1,4 @@
+//import SignGenerateToken from './components/SignAdmin/SignGenereteToken';
 import React from 'react';
 import './styles/App.css';
 import PageLayout from './components/PageLayout';
@@ -7,15 +8,14 @@ import Login from './pages/Login/Login';
 import ProfileContent from './components/ProfileContent/ProfileContent';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import Loader from './components/Loader';
-//import SignGenerateToken from './components/SignAdmin/SignGenereteToken';
 import { useStore } from './stores/index';
+import NotFound from './pages/NotFound';
 
 const AppRoutes = () => {
   return (
     <Routes>
       <Route path='/' element={<Login />} />
-
-      {/* Rotas protegidas */}
+      <Route path='*' element={<NotFound />} />
       <Route
         path='/escolha/professor'
         element={

@@ -74,6 +74,7 @@ const Login = () => {
             onClick={() => setShowPassword((prev) => !prev)}
             style={{
               position: 'absolute',
+              border: '1px solid #ccc',
               background: 'none',
               right: '0',
               top: '0',
