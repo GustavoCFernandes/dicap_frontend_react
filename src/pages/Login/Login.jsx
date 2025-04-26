@@ -8,6 +8,7 @@ const Login = () => {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false); // <- aqui!
   const [errorLogin, setErrorLogin] = useState(false);
   const { setLoading, setUser } = useStore();
 
@@ -59,15 +60,42 @@ const Login = () => {
           />
         </div>
 
-        <div>
+        <div style={{ position: 'relative' }}>
           <input
-            type='password'
+            type={showPassword ? 'text' : 'password'}
             id='password'
             required
             placeholder='Senha'
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
+          <button
+            type='button'
+            onClick={() => setShowPassword((prev) => !prev)}
+            style={{
+              position: 'absolute',
+              background: 'none',
+              right: '0',
+              top: '0',
+              width: '40px',
+              height: '100%',
+              cursor: 'pointer',
+            }}
+          >
+            {showPassword ? (
+              <img
+                src='/imgs/icons/password/hide.png'
+                class='card-img-top'
+                alt='Icone'
+              ></img>
+            ) : (
+              <img
+                src='/imgs/icons/password/show.png'
+                class='card-img-top'
+                alt='Icone'
+              ></img>
+            )}
+          </button>
         </div>
 
         {errorLogin && (

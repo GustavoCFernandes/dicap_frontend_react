@@ -51,7 +51,7 @@ const ChoiceTeacher = () => {
               <div class='card-body'>
                 <div className='p-3'>
                   <img
-                    src='/imgs/icons_teachers/ensino.png'
+                    src='/imgs/icons/icons_teachers/ensino.png'
                     class='card-img-top'
                     alt='Icone'
                     style={{ width: '90px', height: '90px' }}
