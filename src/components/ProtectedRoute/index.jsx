@@ -3,7 +3,6 @@ import { useStore } from '../../stores/index';
 
 export function ProtectedRoute({ children }) {
   const { user } = useStore();
-  console.log('user:', user);
   const isAuthenticated = localStorage.getItem('token');
 
   if (!isAuthenticated || !user) {

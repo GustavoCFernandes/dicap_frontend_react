@@ -14,6 +14,7 @@ import { useStore } from '../../stores/index';
 import BtnBackChoiceTeacher from '../../components/BtnBackChoiceTeacher';
 import { updatePointsStudent } from '../../services/students';
 import Swal from 'sweetalert2';
+import { sendMessageWhatsapp } from '../../services/whatsapp';
 
 const Calendar = () => {
   let stutentName = 'Estudante';
@@ -47,6 +48,27 @@ const Calendar = () => {
       title: 'Oops...',
       text: msg,
     });
+  }
+
+  function messageCreateNewEvent(newStart, newEnd, fullNameEvent) {
+    return `${fullNameEvent} agendou uma nova aula no dia ${newStart.toFormat(
+      'dd/LL/yy'
+    )} das ${newStart.toLocaleString(
+      DateTime.TIME_SIMPLE
+    )} às ${newEnd.toLocaleString(DateTime.TIME_SIMPLE)}.`;
+  }
+
+  function messageDeleteEvent(event) {
+    const start = DateTime.fromISO(event.start.dateTime, {
+      zone: 'utc',
+    }).setZone('America/Sao_Paulo');
+    const end = DateTime.fromISO(event.end.dateTime, { zone: 'utc' }).setZone(
+      'America/Sao_Paulo'
+    );
+
+    return `${event.subject} cancelou a aula do dia ${start.toFormat(
+      'dd/MM/yy'
+    )} das ${start.toFormat('HH:mm')} às ${end.toFormat('HH:mm')}.`;
   }
 
   // Buscar eventos do Graph
@@ -133,7 +155,21 @@ const Calendar = () => {
         },
       };
 
-      await graphCreateEvent(eventCalendar, teacherId);
+      const messageNewEvent = messageCreateNewEvent(
+        newStart,
+        newEnd,
+        fullNameEvent
+      );
+      console.log(messageNewEvent);
+
+      await sendMessageWhatsapp(messageNewEvent);
+
+      const eventCreate = await graphCreateEvent(eventCalendar, teacherId);
+      if (eventCreate.error) {
+        ErrorAlert('Erro ao criar evento.');
+        return;
+      }
+
       const newPoints = user.points - pointsToDeduct;
       await updatePointsStudent({ userId: user.id, points: newPoints });
       setUser({ ...user, points: newPoints });
@@ -171,6 +207,10 @@ const Calendar = () => {
         }).then(() => {
           fetchEvents();
         });
+
+        const deleteMsg = messageDeleteEvent(eventToDelete);
+        await sendMessageWhatsapp(deleteMsg);
+        console.log(deleteMsg);
       }
     } catch (error) {
       console.error(error);
