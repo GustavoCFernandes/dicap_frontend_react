@@ -160,15 +160,17 @@ const Calendar = () => {
         newEnd,
         fullNameEvent
       );
-      console.log(messageNewEvent);
-
-      await sendMessageWhatsapp(messageNewEvent);
 
       const eventCreate = await graphCreateEvent(eventCalendar, teacherId);
       if (eventCreate.error) {
         ErrorAlert('Erro ao criar evento.');
         return;
+      } else {
+        console.log(messageNewEvent);
+        await sendMessageWhatsapp(messageNewEvent, user.phone);
       }
+
+      console.log('eventCreate:', eventCreate);
 
       const newPoints = user.points - pointsToDeduct;
       await updatePointsStudent({ userId: user.id, points: newPoints });
@@ -209,7 +211,7 @@ const Calendar = () => {
         });
 
         const deleteMsg = messageDeleteEvent(eventToDelete);
-        await sendMessageWhatsapp(deleteMsg);
+        await sendMessageWhatsapp(deleteMsg, user.phone);
         console.log(deleteMsg);
       }
     } catch (error) {

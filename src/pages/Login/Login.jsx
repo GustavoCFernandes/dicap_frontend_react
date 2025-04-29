@@ -24,6 +24,7 @@ const Login = () => {
     loginStudent(formData)
       .then((response) => {
         if (response.user) {
+          console.log('response.user:', response.user);
           setUser(response.user);
           localStorage.setItem('token', response.token);
         }

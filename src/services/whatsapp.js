@@ -1,7 +1,6 @@
-export async function sendMessageWhatsapp(message) {
+export async function sendMessageWhatsapp(message, phoneNumber) {
   const baseUrl = process.env.REACT_APP_BASE_URL_SERVICE_WHATSAPP;
   const instance = process.env.REACT_APP_INSTANCE_WHATSAPP;
-  const phoneNumber = process.env.REACT_APP_NUMBER_API_WHATSAPP;
   const apikey = process.env.REACT_APP_API_KEY_WHATSAPP;
 
   if (!baseUrl || !instance) {
