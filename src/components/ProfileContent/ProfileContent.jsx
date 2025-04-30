@@ -6,18 +6,17 @@ import {
 } from '../../services/graph';
 import ProfileData from '../../components/ProfileData';
 import '../../styles/App.css';
+import { useStore } from '../../stores/index';
 
 const ProfileContent = () => {
   const [graphData, setGraphData] = useState(null);
+  const { teacherId } = useStore();
 
   function RequestProfileData() {
     generetedAccessTokenGraphToBakend()
       .then((response) => {
         localStorage.setItem('accessToken', response.accessToken);
-        callMsGraph(
-          response.accessToken,
-          process.env.REACT_APP_TEACHER_ID_1
-        ).then((response) => {
+        callMsGraph(response.accessToken, teacherId).then((response) => {
           setGraphData(response);
         });
       })

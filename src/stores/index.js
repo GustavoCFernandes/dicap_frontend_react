@@ -7,7 +7,9 @@ export const useStore = create(
       user: null,
       isLoading: false,
       teacherId: null,
+      teacherName: null,
       setTeacherId: (id) => set({ teacherId: id }),
+      setTeacherName: (name) => set({ teacherName: name }),
       setLoading: (loadingValue) => set({ isLoading: loadingValue }),
       setUser: (user) => set({ user }),
       logout: () => set({ user: null, teacherId: null }),
@@ -17,6 +19,7 @@ export const useStore = create(
       partialize: (state) => ({
         user: state.user,
         teacherId: state.teacherId,
+        teacherName: state.teacherName,
       }),
     }
   )

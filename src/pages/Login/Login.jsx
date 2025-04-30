@@ -24,7 +24,6 @@ const Login = () => {
     loginStudent(formData)
       .then((response) => {
         if (response.user) {
-          console.log('response.user:', response.user);
           setUser(response.user);
           localStorage.setItem('token', response.token);
         }
@@ -87,13 +86,13 @@ const Login = () => {
             {showPassword ? (
               <img
                 src='/imgs/icons/password/hide.png'
-                class='card-img-top'
+                className='card-img-top'
                 alt='Icone'
               ></img>
             ) : (
               <img
                 src='/imgs/icons/password/show.png'
-                class='card-img-top'
+                className='card-img-top'
                 alt='Icone'
               ></img>
             )}

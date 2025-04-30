@@ -7,10 +7,11 @@ import { useEffect, useState } from 'react';
 
 const ChoiceTeacher = () => {
   const navigate = useNavigate();
-  const { setLoading, setTeacherId } = useStore();
+  const { setLoading, setTeacherId, setTeacherName } = useStore();
   const [teachers, setTeachers] = useState([]);
 
-  const handleCardClick = (teacherId) => {
+  const handleCardClick = (teacherId, teacherName) => {
+    setTeacherName(teacherName);
     setTeacherId(teacherId);
     navigate('/agenda');
     setLoading(true);
@@ -39,20 +40,22 @@ const ChoiceTeacher = () => {
       <div id='card-teacher-content'>
         {teachers.map((teacher) => (
           <div
-            key={teacher.id}
-            class='card'
+            key={teacher.id_object_azure_microsoft}
+            className='card'
             style={{ width: '200px', height: '250px' }}
           >
             <div
               className='cursor-pointer'
-              onClick={() => handleCardClick(teacher.id)}
+              onClick={() =>
+                handleCardClick(teacher.id_object_azure_microsoft, teacher.name)
+              }
               style={{ cursor: 'pointer' }}
             >
-              <div class='card-body'>
+              <div className='card-body'>
                 <div className='p-3'>
                   <img
                     src='/imgs/icons/icons_teachers/ensino.png'
-                    class='card-img-top'
+                    className='card-img-top'
                     alt='Icone'
                     style={{ width: '90px', height: '90px' }}
                   ></img>

@@ -20,8 +20,8 @@ const Calendar = () => {
   let stutentName = 'Estudante';
   let enterprise = 'Empresa';
   let fullNameEvent = '';
-  const { setLoading, user, setUser } = useStore();
-  const teacherId = process.env.REACT_APP_TEACHER_ID_1;
+  const { setLoading, user, setUser, teacherId } = useStore();
+  // const teacherId = process.env.REACT_APP_TEACHER_ID_1; // TEST
   const [showChoiceModal, setShowChoiceModal] = useState(false);
   const [tempStart, setTempStart] = useState('');
   const [tempEnd, setTempEnd] = useState('');
