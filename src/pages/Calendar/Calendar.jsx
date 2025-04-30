@@ -153,6 +153,19 @@ const Calendar = () => {
           dateTime: newEnd.toUTC().toISO(),
           timeZone: 'UTC',
         },
+        attendees: [
+          {
+            emailAddress: {
+              address: user.email,
+            },
+            type: 'required',
+          },
+        ],
+        location: {
+          displayName: 'Microsoft Teams',
+        },
+        isOnlineMeeting: true,
+        onlineMeetingProvider: 'teamsForBusiness',
       };
 
       const messageNewEvent = messageCreateNewEvent(
