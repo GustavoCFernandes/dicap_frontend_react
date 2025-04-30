@@ -38,34 +38,39 @@ const ChoiceTeacher = () => {
         <BtnExit />
       </div>
       <div id='card-teacher-content'>
-        {teachers.map((teacher) => (
-          <div
-            key={teacher.id_object_azure_microsoft}
-            className='card'
-            style={{ width: '200px', height: '250px' }}
-          >
+        {teachers
+          .filter((teacher) => teacher.active_account)
+          .map((teacher) => (
             <div
-              className='cursor-pointer'
-              onClick={() =>
-                handleCardClick(teacher.id_object_azure_microsoft, teacher.name)
-              }
-              style={{ cursor: 'pointer' }}
+              key={teacher.id_object_azure_microsoft}
+              className='card'
+              style={{ width: '200px', height: '250px' }}
             >
-              <div className='card-body'>
-                <div className='p-3'>
-                  <img
-                    src='/imgs/icons/icons_teachers/ensino.png'
-                    className='card-img-top'
-                    alt='Icone'
-                    style={{ width: '90px', height: '90px' }}
-                  ></img>
+              <div
+                className='cursor-pointer'
+                onClick={() =>
+                  handleCardClick(
+                    teacher.id_object_azure_microsoft,
+                    teacher.name
+                  )
+                }
+                style={{ cursor: 'pointer' }}
+              >
+                <div className='card-body'>
+                  <div className='p-3'>
+                    <img
+                      src='/imgs/icons/icons_teachers/ensino.png'
+                      className='card-img-top'
+                      alt='Icone'
+                      style={{ width: '90px', height: '90px' }}
+                    ></img>
+                  </div>
+                  <small className='pb-3'>agendar aula com professor(a):</small>
+                  <h5>{teacher.name}</h5>
                 </div>
-                <small className='pb-3'>agendar aula com professor(a):</small>
-                <h5>{teacher.name}</h5>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
       </div>
     </div>
   );
