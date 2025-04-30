@@ -1,4 +1,4 @@
-export async function sendMessageWhatsapp(message, phoneNumber) {
+export async function sendMessageWhatsapp(message, id_group_whatsapp) {
   const baseUrl = process.env.REACT_APP_BASE_URL_SERVICE_WHATSAPP;
   const instance = process.env.REACT_APP_INSTANCE_WHATSAPP;
   const apikey = process.env.REACT_APP_API_KEY_WHATSAPP;
@@ -9,7 +9,7 @@ export async function sendMessageWhatsapp(message, phoneNumber) {
     );
   }
 
-  if (!phoneNumber || !message) {
+  if (!id_group_whatsapp || !message) {
     throw new Error('O número de telefone e a mensagem são obrigatórios.');
   }
 
@@ -18,7 +18,7 @@ export async function sendMessageWhatsapp(message, phoneNumber) {
   headers.append('apikey', apikey);
 
   const body = {
-    number: phoneNumber,
+    number: id_group_whatsapp,
     textMessage: {
       text: message,
     },

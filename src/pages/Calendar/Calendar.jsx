@@ -180,7 +180,7 @@ const Calendar = () => {
         return;
       } else {
         console.log(messageNewEvent);
-        await sendMessageWhatsapp(messageNewEvent, user.phone);
+        await sendMessageWhatsapp(messageNewEvent, user.id_group_whatsapp);
       }
 
       console.log('eventCreate:', eventCreate);
@@ -224,7 +224,7 @@ const Calendar = () => {
         });
 
         const deleteMsg = messageDeleteEvent(eventToDelete);
-        await sendMessageWhatsapp(deleteMsg, user.phone);
+        await sendMessageWhatsapp(deleteMsg, user.id_group_whatsapp);
         console.log(deleteMsg);
       }
     } catch (error) {
