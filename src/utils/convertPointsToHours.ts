@@ -14,7 +14,3 @@ export function convertPointsToHours(points: number): string {
   return `${wholeHours}:${minutes < 10 ? '0' + minutes : minutes} horas`;
 }
 
-const points = 2;
-const hours = convertPointsToHours(points);
-console.log(hours);
-
