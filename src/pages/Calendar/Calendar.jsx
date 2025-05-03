@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
+import { DateTime } from 'luxon';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import allLocales from '@fullcalendar/core/locales-all';
-import { DateTime } from 'luxon';
 import {
   graphCalendar,
   graphCreateEvent,
@@ -17,6 +17,11 @@ import Swal from 'sweetalert2';
 import { sendMessageWhatsapp } from '../../services/whatsapp';
 import { modalOverlayStyle, modalStyle } from './styles.ts';
 import { showEventTooltip } from '../../utils/showEventTooltip.ts';
+import {
+  messageCreateNewEvent,
+  messageDeleteEvent,
+  ErrorAlert,
+} from '../../utils/messageEvent.ts';
 
 const Calendar = () => {
   // const teacherId = process.env.REACT_APP_TEACHER_ID_1; // TEST
@@ -42,35 +47,6 @@ const Calendar = () => {
     stutentName = user.name;
     enterprise = user.enterprise;
     fullNameEvent = `${stutentName}/${enterprise} (SA)`;
-  }
-
-  function ErrorAlert(msg) {
-    Swal.fire({
-      icon: 'error',
-      title: 'Oops...',
-      text: msg,
-    });
-  }
-
-  function messageCreateNewEvent(newStart, newEnd, fullNameEvent) {
-    return `${fullNameEvent} agendou uma nova aula no dia ${newStart.toFormat(
-      'dd/LL/yy'
-    )} das ${newStart.toLocaleString(
-      DateTime.TIME_SIMPLE
-    )} às ${newEnd.toLocaleString(DateTime.TIME_SIMPLE)}.`;
-  }
-
-  function messageDeleteEvent(event) {
-    const start = DateTime.fromISO(event.start.dateTime, {
-      zone: 'utc',
-    }).setZone('America/Sao_Paulo');
-    const end = DateTime.fromISO(event.end.dateTime, { zone: 'utc' }).setZone(
-      'America/Sao_Paulo'
-    );
-
-    return `${event.subject} cancelou a aula do dia ${start.toFormat(
-      'dd/MM/yy'
-    )} das ${start.toFormat('HH:mm')} às ${end.toFormat('HH:mm')}.`;
   }
 
   // Buscar eventos do Graph
@@ -101,7 +77,7 @@ const Calendar = () => {
   }, [fetchEvents, setLoading, events]);
 
   // Criar evento via Graph
-  const handleSubmit = async () => {
+  const handleCreateEvent = async () => {
     setIsSubmitting(true);
     try {
       const now = DateTime.local().plus({ hours: 2 });
@@ -200,7 +176,7 @@ const Calendar = () => {
     }
   };
 
-  const handleDelete = async (eventCalendarId) => {
+  const handleDeleteEvent = async (eventCalendarId) => {
     try {
       const matching = await graphCalendar(teacherId);
       const eventToDelete = matching.value.find(
@@ -277,7 +253,7 @@ const Calendar = () => {
             {actionType === 'create' && (
               <button
                 className='btn btn-primary m-3'
-                onClick={handleSubmit}
+                onClick={handleCreateEvent}
                 disabled={isSubmitting}
               >
                 {isSubmitting ? 'Agendando...' : 'Agendar'}
@@ -376,7 +352,7 @@ const Calendar = () => {
             confirmButtonText: 'Sim, excluir evento desta data',
           }).then((result) => {
             if (result.isConfirmed) {
-              handleDelete(info.event.id);
+              handleDeleteEvent(info.event.id);
             }
           });
         }}
