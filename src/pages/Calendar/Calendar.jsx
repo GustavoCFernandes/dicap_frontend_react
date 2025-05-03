@@ -102,7 +102,7 @@ const Calendar = () => {
   const handleSubmit = async () => {
     setIsSubmitting(true);
     try {
-      const now = DateTime.local().plus({ hours: 3 });
+      const now = DateTime.local().plus({ hours: 2 });
       const newStart = DateTime.fromISO(newEvent.start);
       const newEnd = DateTime.fromISO(newEvent.end);
 
@@ -121,7 +121,7 @@ const Calendar = () => {
 
       if (newStart < now) {
         ErrorAlert(
-          'O horário do evento deve ser com pelo menos 3 horas de antecedência.'
+          'O horário do evento deve ser agendado com pelo menos 2 horas de antecedência.'
         );
         return;
       }
@@ -183,8 +183,6 @@ const Calendar = () => {
         await sendMessageWhatsapp(messageNewEvent, user.id_group_whatsapp);
       }
 
-      console.log('eventCreate:', eventCreate);
-
       const newPoints = user.points - pointsToDeduct;
       await updatePointsStudent({ userId: user.id, points: newPoints });
       setUser({ ...user, points: newPoints });
@@ -211,6 +209,19 @@ const Calendar = () => {
         ErrorAlert('Evento não encontrado.');
         return;
       }
+
+      // Verificação de 2 horas de antecedência para deletar
+      const now = DateTime.local();
+      const eventStart = DateTime.fromISO(eventToDelete.start.dateTime);
+      const diffInMinutes = eventStart.diff(now, 'minutes').minutes;
+
+      if (diffInMinutes < 120) {
+        ErrorAlert(
+          'Você só pode cancelar eventos com pelo menos 2 horas de antecedência.'
+        );
+        return;
+      }
+
       const result = await graphDeleteEvent(teacherId, eventCalendarId);
 
       if (result) {
@@ -224,8 +235,10 @@ const Calendar = () => {
         });
 
         const deleteMsg = messageDeleteEvent(eventToDelete);
-        await sendMessageWhatsapp(deleteMsg, user.id_group_whatsapp);
-        console.log(deleteMsg);
+        if (deleteMsg) {
+          console.log('deleteMsg', deleteMsg);
+          await sendMessageWhatsapp(deleteMsg, user.id_group_whatsapp);
+        }
       }
     } catch (error) {
       console.error(error);
