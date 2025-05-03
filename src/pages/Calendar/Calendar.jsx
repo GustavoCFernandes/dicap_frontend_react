@@ -15,13 +15,15 @@ import BtnBackChoiceTeacher from '../../components/BtnBackChoiceTeacher';
 import { updatePointsStudent } from '../../services/students';
 import Swal from 'sweetalert2';
 import { sendMessageWhatsapp } from '../../services/whatsapp';
+import { modalOverlayStyle, modalStyle } from './styles.ts';
+import { showEventTooltip } from '../../utils/showEventTooltip.ts';
 
 const Calendar = () => {
+  // const teacherId = process.env.REACT_APP_TEACHER_ID_1; // TEST
   let stutentName = 'Estudante';
   let enterprise = 'Empresa';
   let fullNameEvent = '';
   const { setLoading, user, setUser, teacherId } = useStore();
-  // const teacherId = process.env.REACT_APP_TEACHER_ID_1; // TEST
   const [showChoiceModal, setShowChoiceModal] = useState(false);
   const [tempStart, setTempStart] = useState('');
   const [tempEnd, setTempEnd] = useState('');
@@ -96,7 +98,7 @@ const Calendar = () => {
   useEffect(() => {
     setLoading(false);
     fetchEvents();
-  }, [fetchEvents, setLoading]);
+  }, [fetchEvents, setLoading, events]);
 
   // Criar evento via Graph
   const handleSubmit = async () => {
@@ -215,7 +217,7 @@ const Calendar = () => {
       const eventStart = DateTime.fromISO(eventToDelete.start.dateTime);
       const diffInMinutes = eventStart.diff(now, 'minutes').minutes;
 
-      if (diffInMinutes < 120) {
+      if (diffInMinutes < 300) {
         ErrorAlert(
           'Você só pode cancelar eventos com pelo menos 2 horas de antecedência.'
         );
@@ -337,9 +339,11 @@ const Calendar = () => {
           minute: '2-digit',
           hour12: false,
         }}
-        validRange={{
-          start: DateTime.now().toISODate(),
-        }}
+        // Desabilita a seleção de datas passadas
+        //validRange={{
+        //  start: DateTime.now().toISODate(),
+        //}}
+        eventDidMount={showEventTooltip}
         nowIndicator={true}
         height='auto'
         dateClick={(info) => {
@@ -379,29 +383,6 @@ const Calendar = () => {
       />
     </div>
   );
-};
-
-// Estilos simples do modal
-const modalOverlayStyle = {
-  backgroundColor: 'rgba(0, 0, 0, 0.9)',
-  position: 'fixed',
-  top: 0,
-  left: 0,
-  width: '100vw',
-  height: '100vh',
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  zIndex: 1000,
-};
-
-const modalStyle = {
-  backgroundColor: 'white',
-  padding: '2rem',
-  borderRadius: '8px',
-  boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
-  maxWidth: '400px',
-  width: '100%',
 };
 
 export default Calendar;
