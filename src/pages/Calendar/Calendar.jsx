@@ -11,7 +11,7 @@ import {
   graphDeleteEvent,
 } from '../../services/graph';
 import { useStore } from '../../stores/index';
-import BtnBackChoiceTeacher from '../../components/BtnBackChoiceTeacher';
+import HeaderCalendar from '../Calendar/HeaderCalendar.jsx';
 import { updatePointsStudent } from '../../services/students';
 import Swal from 'sweetalert2';
 import { sendMessageWhatsapp } from '../../services/whatsapp';
@@ -250,7 +250,7 @@ const Calendar = () => {
 
   return (
     <div id='calendar-content'>
-      <BtnBackChoiceTeacher />
+      <HeaderCalendar />
       {showModal && (
         <div style={modalOverlayStyle}>
           <div style={modalStyle}>

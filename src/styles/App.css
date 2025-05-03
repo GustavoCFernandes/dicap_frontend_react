@@ -172,14 +172,29 @@ h3 {
   }
 
   #btn-back-choice-techaer-content  {
+    font-size: 8px;
     margin-top: 0rem;
+    padding-bottom: 2rem;
     position: absolute;
     top: 0;
     left: 0;
   }
 
+  #btn-choice-teacher {
+    font-size: 8px;
+  }
+
   .login-form {
     padding: 2rem 1rem;
-}
+  }
+
+  .text-hide-sm {
+    display: none;
+  }
+
+  .btn-exit {
+    font-size: 8px;
+    padding: 5px 8px;
+  }
 }
 
