@@ -58,10 +58,10 @@ export const loginRequestScopes = {
   scopes: [
     'User.Read',
     'Calendars.Read',
-    'Calendars.Read.Shared',
-    'Calendars.ReadBasic',
     'Calendars.ReadWrite',
-    'Calendars.ReadWrite.Shared',
+    //'Calendars.ReadBasic',
+    //'Calendars.Read.Shared',
+    //'Calendars.ReadWrite.Shared',
   ],
 };
 
@@ -79,7 +79,7 @@ export const loginRequestScopes = {
 export const graphApplicationConfig = {
   user: (teacherId) => `https://graph.microsoft.com/v1.0/users/${teacherId}`,
   calendar: (teacherId) =>
-    `https://graph.microsoft.com/v1.0/users/${teacherId}/calendar/events?`,
+    `https://graph.microsoft.com/v1.0/users/${teacherId}/calendar/events`,
   eventCalendar: (teacherId, eventId) =>
     `https://graph.microsoft.com/v1.0/users/${teacherId}/events/${eventId}`,
 };

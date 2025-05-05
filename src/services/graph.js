@@ -1,5 +1,4 @@
 import { graphApplicationConfig } from '../authConfig';
-
 /**
  * Attaches a given access token to a MS Graph API call. Returns information about the user
  * @param accessToken
@@ -65,7 +64,11 @@ export async function graphCalendar(teacherId) {
     headers: headers,
   };
 
-  return fetch(graphApplicationConfig.calendar(teacherId), options)
+  return fetch(
+    graphApplicationConfig.calendar(teacherId) +
+      '?$filter=isCancelled eq false&$top=40',
+    options
+  )
     .then((response) => response.json())
     .catch((error) => console.log(error));
 }

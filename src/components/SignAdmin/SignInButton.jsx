@@ -1,4 +1,4 @@
-import React from 'react';
+/*import React from 'react';
 import { useMsal } from '@azure/msal-react';
 import { loginRequestScopes } from '../../authConfig';
 import DropdownButton from 'react-bootstrap/DropdownButton';
@@ -6,7 +6,6 @@ import Dropdown from 'react-bootstrap/Dropdown';
 
 /**
  * Renders a drop down button with child buttons for logging in with a popup or redirect
- */
 export const SignInButton = () => {
   const { instance } = useMsal();
 
@@ -37,3 +36,4 @@ export const SignInButton = () => {
     </DropdownButton>
   );
 };
+ */
