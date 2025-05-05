@@ -78,7 +78,9 @@ export const loginRequestScopes = {
 
 export const graphApplicationConfig = {
   user: (teacherId) => `https://graph.microsoft.com/v1.0/users/${teacherId}`,
-  calendar: (teacherId) =>
+  calendarView: (teacherId) =>
+    `https://graph.microsoft.com/v1.0/users/${teacherId}/calendar/calendarView`,
+  calendarEvents: (teacherId) =>
     `https://graph.microsoft.com/v1.0/users/${teacherId}/calendar/events`,
   eventCalendar: (teacherId, eventId) =>
     `https://graph.microsoft.com/v1.0/users/${teacherId}/events/${eventId}`,

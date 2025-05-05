@@ -54,6 +54,8 @@ const Calendar = () => {
     try {
       const data = await graphCalendar(teacherId);
 
+      //console.log('data:', data);
+
       const formatted = data.value.map((event) => ({
         id: event.id,
         title: event.subject,
@@ -178,6 +180,9 @@ const Calendar = () => {
 
   const handleDeleteEvent = async (eventCalendarId) => {
     try {
+      //const threeHours = 300;
+      const thoHours = 180;
+
       const matching = await graphCalendar(teacherId);
       const eventToDelete = matching.value.find(
         (event) => event.id === eventCalendarId
@@ -193,7 +198,7 @@ const Calendar = () => {
       const eventStart = DateTime.fromISO(eventToDelete.start.dateTime);
       const diffInMinutes = eventStart.diff(now, 'minutes').minutes;
 
-      if (diffInMinutes < 300) {
+      if (diffInMinutes < thoHours) {
         ErrorAlert(
           'Você só pode cancelar eventos com pelo menos 2 horas de antecedência.'
         );

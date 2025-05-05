@@ -56,6 +56,11 @@ export async function graphCalendar(teacherId) {
 
   const headers = new Headers();
   const bearer = `Bearer ${accessToken}`;
+  const params = `?startDateTime=2025-05-05T00:00:00Z
+        &endDateTime=2025-05-11T23:59:59Z
+        &$filter=isCancelled eq false
+        &$orderby=start/dateTime desc
+        &$top=500`;
 
   headers.append('Authorization', bearer);
 
@@ -64,11 +69,7 @@ export async function graphCalendar(teacherId) {
     headers: headers,
   };
 
-  return fetch(
-    graphApplicationConfig.calendar(teacherId) +
-      '?$filter=isCancelled eq false&$top=40',
-    options
-  )
+  return fetch(graphApplicationConfig.calendarView(teacherId) + params, options)
     .then((response) => response.json())
     .catch((error) => console.log(error));
 }
@@ -76,14 +77,17 @@ export async function graphCalendar(teacherId) {
 export async function graphCreateEvent(eventCalendar, teacherId) {
   const accessToken = getToken();
 
-  const response = await fetch(graphApplicationConfig.calendar(teacherId), {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${accessToken}`, // ajuste conforme seu auth
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(eventCalendar),
-  });
+  const response = await fetch(
+    graphApplicationConfig.calendarEvents(teacherId),
+    {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${accessToken}`, // ajuste conforme seu auth
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(eventCalendar),
+    }
+  );
 
   if (!response.ok) {
     throw new Error('Erro ao criar evento');
