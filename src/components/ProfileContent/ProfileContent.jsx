@@ -7,17 +7,20 @@ import {
 import ProfileData from '../../components/ProfileData';
 import '../../styles/App.css';
 import { useStore } from '../../stores/index';
+import Loader from '../../components/Loader';
 
 const ProfileContent = () => {
   const [graphData, setGraphData] = useState(null);
-  const { teacherId } = useStore();
+  const { teacherId, setLoading } = useStore();
 
   function RequestProfileData() {
+    setLoading(true);
     generetedAccessTokenGraphToBakend()
       .then((response) => {
         localStorage.setItem('accessToken', response.accessToken);
         callMsGraph(response.accessToken, teacherId).then((response) => {
           setGraphData(response);
+          setLoading(false);
         });
       })
       .catch((error) => {
@@ -29,15 +32,7 @@ const ProfileContent = () => {
     RequestProfileData();
   }, []);
 
-  return (
-    <>
-      {graphData ? (
-        <ProfileData graphData={graphData} />
-      ) : (
-        <p>Carregando informações do Professor...</p>
-      )}
-    </>
-  );
+  return <>{graphData ? <ProfileData graphData={graphData} /> : <Loader />}</>;
 };
 
 export default ProfileContent;

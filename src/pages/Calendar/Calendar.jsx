@@ -22,13 +22,14 @@ import {
   messageDeleteEvent,
   ErrorAlert,
 } from '../../utils/messageEvent.ts';
+import Loader from '../../components/Loader.jsx';
 
 const Calendar = () => {
   // const teacherId = process.env.REACT_APP_TEACHER_ID_1; // TEST
   let stutentName = 'Estudante';
   let enterprise = 'Empresa';
   let fullNameEvent = '';
-  const { setLoading, user, setUser, teacherId } = useStore();
+  const { user, setUser, teacherId } = useStore();
   const [showChoiceModal, setShowChoiceModal] = useState(false);
   const [tempStart, setTempStart] = useState('');
   const [tempEnd, setTempEnd] = useState('');
@@ -54,8 +55,6 @@ const Calendar = () => {
     try {
       const data = await graphCalendar(teacherId);
 
-      //console.log('data:', data);
-
       const formatted = data.value.map((event) => ({
         id: event.id,
         title: event.subject,
@@ -74,9 +73,8 @@ const Calendar = () => {
   }, [teacherId]);
 
   useEffect(() => {
-    setLoading(false);
     fetchEvents();
-  }, [fetchEvents, setLoading, events]);
+  }, [fetchEvents, events]);
 
   // Criar evento via Graph
   const handleCreateEvent = async () => {
@@ -303,65 +301,71 @@ const Calendar = () => {
         </div>
       )}
 
-      <FullCalendar
-        plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-        initialView='dayGridMonth'
-        events={events}
-        locales={allLocales}
-        locale='pt-br'
-        timeZone='America/Sao_Paulo'
-        headerToolbar={{
-          left: 'prev,next today',
-          center: 'title',
-          right: 'dayGridMonth,timeGridWeek,timeGridDay',
-        }}
-        slotLabelFormat={{
-          hour: '2-digit',
-          minute: '2-digit',
-          hour12: false,
-        }}
-        // Desabilita a seleção de datas passadas
-        //validRange={{
-        //  start: DateTime.now().toISODate(),
-        //}}
-        eventDidMount={showEventTooltip}
-        nowIndicator={true}
-        height='auto'
-        dateClick={(info) => {
-          const start = DateTime.fromISO(info.dateStr)
-            .set({ hour: 7, minute: 0 })
-            .toFormat("yyyy-MM-dd'T'HH:mm");
+      <div>
+        {events.length !== 0 ? (
+          <FullCalendar
+            plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+            initialView='dayGridMonth'
+            events={events}
+            locales={allLocales}
+            locale='pt-br'
+            timeZone='America/Sao_Paulo'
+            headerToolbar={{
+              left: 'prev,next today',
+              center: 'title',
+              right: 'dayGridMonth,timeGridWeek,timeGridDay',
+            }}
+            slotLabelFormat={{
+              hour: '2-digit',
+              minute: '2-digit',
+              hour12: false,
+            }}
+            // Desabilita a seleção de datas passadas
+            //validRange={{
+            //  start: DateTime.now().toISODate(),
+            //}}
+            eventDidMount={showEventTooltip}
+            nowIndicator={true}
+            height='auto'
+            dateClick={(info) => {
+              const start = DateTime.fromISO(info.dateStr)
+                .set({ hour: 7, minute: 0 })
+                .toFormat("yyyy-MM-dd'T'HH:mm");
 
-          const end = DateTime.fromISO(info.dateStr)
-            .set({ hour: 8, minute: 0 })
-            .toFormat("yyyy-MM-dd'T'HH:mm");
+              const end = DateTime.fromISO(info.dateStr)
+                .set({ hour: 8, minute: 0 })
+                .toFormat("yyyy-MM-dd'T'HH:mm");
 
-          setTempStart(start);
-          setTempEnd(end);
-          setShowChoiceModal(true);
-        }}
-        eventClick={(info) => {
-          // Verifica se o evento é do usuário
-          if (info.event.title !== fullNameEvent) {
-            ErrorAlert('Você só pode excluir seus próprios eventos.');
-            return;
-          }
+              setTempStart(start);
+              setTempEnd(end);
+              setShowChoiceModal(true);
+            }}
+            eventClick={(info) => {
+              // Verifica se o evento é do usuário
+              if (info.event.title !== fullNameEvent) {
+                ErrorAlert('Você só pode excluir seus próprios eventos.');
+                return;
+              }
 
-          Swal.fire({
-            title: `Deseja excluir o compromisso desta data?`,
-            text: 'Esta ação vai excluir o evento selecionado.',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Sim, excluir evento desta data',
-          }).then((result) => {
-            if (result.isConfirmed) {
-              handleDeleteEvent(info.event.id);
-            }
-          });
-        }}
-      />
+              Swal.fire({
+                title: `Deseja excluir o compromisso desta data?`,
+                text: 'Esta ação vai excluir o evento selecionado.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sim, excluir evento desta data',
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  handleDeleteEvent(info.event.id);
+                }
+              });
+            }}
+          />
+        ) : (
+          <Loader />
+        )}
+      </div>
     </div>
   );
 };
