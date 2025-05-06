@@ -10,6 +10,35 @@ function getToken() {
   return token;
 }
 
+function getParamsGraphCalendar() {
+   const today = new Date();
+
+   // Começo da semana (domingo)
+   const startOfWeek = new Date(today);
+   const dayOfWeek = today.getDay(); // 0 (domingo) a 6 (sábado)
+   startOfWeek.setDate(today.getDate() - dayOfWeek);
+   startOfWeek.setHours(0, 0, 0, 0);
+
+   // Fim do intervalo (30 dias após o domingo)
+   const endDate = new Date(startOfWeek);
+   endDate.setDate(startOfWeek.getDate() + 30);
+   endDate.setHours(23, 59, 59, 999);
+
+   function toISOStringNoMs(date) {
+     return date.toISOString().split('.')[0] + 'Z';
+   }
+
+   const startDateTime = toISOStringNoMs(startOfWeek);
+   const endDateTime = toISOStringNoMs(endDate);
+
+   return `?startDateTime=${startDateTime}
+    &endDateTime=${endDateTime}
+    &$filter=isCancelled eq false
+    &$orderby=start/dateTime desc
+    &$top=500`;
+}
+
+
 export async function generetedAccessTokenGraphToBakend() {
   const headers = new Headers();
   headers.append('Content-Type', 'application/json');
@@ -56,11 +85,7 @@ export async function graphCalendar(teacherId) {
 
   const headers = new Headers();
   const bearer = `Bearer ${accessToken}`;
-  const params = `?startDateTime=2025-05-05T00:00:00Z
-        &endDateTime=2025-05-11T23:59:59Z
-        &$filter=isCancelled eq false
-        &$orderby=start/dateTime desc
-        &$top=500`;
+  const params = getParamsGraphCalendar();
 
   headers.append('Authorization', bearer);
 
