@@ -239,18 +239,36 @@ const Calendar = () => {
               className='mb-2'
               type='datetime-local'
               value={newEvent.start}
-              onChange={(e) =>
-                setNewEvent({ ...newEvent, start: e.target.value })
-              }
+              onChange={(e) => {
+                const newStart = e.target.value;
+                let newEnd = newEvent.end;
+
+                if (newEnd && newStart > newEnd) {
+                  newEnd = newStart;
+                }
+
+                setNewEvent({
+                  ...newEvent,
+                  start: newStart,
+                  end: newEnd,
+                });
+              }}
             />
             <br />
             <input
               className='mb-2'
               type='datetime-local'
               value={newEvent.end}
-              onChange={(e) =>
-                setNewEvent({ ...newEvent, end: e.target.value })
-              }
+              onChange={(e) => {
+                const newEnd = e.target.value;
+                let newStart = newEvent.start;
+
+                if (newStart && newEnd < newStart) {
+                  newStart = newEnd;
+                }
+
+                setNewEvent({ ...newEvent, end: newEnd, start: newStart });
+              }}
             />
             <br />
             {actionType === 'create' && (
