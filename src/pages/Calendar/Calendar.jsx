@@ -349,7 +349,7 @@ const Calendar = () => {
         {events.length !== 0 ? (
           <FullCalendar
             plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-            initialView='dayGridMonth'
+            initialView='timeGridWeek'
             events={events}
             locales={allLocales}
             locale='pt-br'
