@@ -63,5 +63,32 @@ export async function updatePointsStudent({ userId, points }) {
     });
 }
 
+export async function updateNumberAppointmentsStudent({
+  userId,
+  number_appointments,
+}) {
+  const headers = new Headers();
+  headers.append('Content-Type', 'application/json');
+  const _number_appointments = Number(number_appointments);
+
+  const options = {
+    method: 'POST',
+    headers: headers,
+    body: JSON.stringify({ userId, number_appointments: _number_appointments }),
+  };
+
+  return fetch(`${urlBackend}/students/number/appointments`, options)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error('Erro ao atualizar quantidade de agendamentos');
+      }
+      return response.json();
+    })
+    .catch((error) => {
+      console.error('Erro na requisição:', error);
+      throw error;
+    });
+}
+
 
 

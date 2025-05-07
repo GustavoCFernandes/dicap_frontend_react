@@ -12,7 +12,10 @@ import {
 } from '../../services/graph';
 import { useStore } from '../../stores/index';
 import HeaderCalendar from '../Calendar/HeaderCalendar.jsx';
-import { updatePointsStudent } from '../../services/students';
+import {
+  updatePointsStudent,
+  updateNumberAppointmentsStudent,
+} from '../../services/students';
 import Swal from 'sweetalert2';
 import { sendMessageWhatsapp } from '../../services/whatsapp';
 import { modalOverlayStyle, modalStyle } from './styles.ts';
@@ -162,7 +165,18 @@ const Calendar = () => {
       }
 
       const newPoints = user.points - pointsToDeduct;
+      // Atualiza os pontos do estudante
       await updatePointsStudent({ userId: user.id, points: newPoints });
+      // Atualiza o número de agendamentos
+      const addNewNumberAppointments = user.number_appointments + 1;
+      await updateNumberAppointmentsStudent({
+        userId: user.id,
+        number_appointments: addNewNumberAppointments,
+      }).then(() => {
+        user.number_appointments = addNewNumberAppointments;
+      });
+
+      // Atualiza o estado do usuário no store
       setUser({ ...user, points: newPoints });
 
       setShowModal(false);
@@ -213,6 +227,18 @@ const Calendar = () => {
           icon: 'success',
         }).then(() => {
           fetchEvents();
+        });
+
+        // Atualiza o número de agendamentos
+        const removeNewNumberAppointments = user.number_appointments - 1;
+        await updateNumberAppointmentsStudent({
+          userId: user.id,
+          number_appointments: removeNewNumberAppointments,
+        }).then(() => {
+          setUser({
+            ...user,
+            number_appointments: removeNewNumberAppointments,
+          });
         });
 
         const deleteMsg = messageDeleteEvent(eventToDelete);
