@@ -18,6 +18,7 @@ import {
 } from '../../services/students';
 import Swal from 'sweetalert2';
 import { sendMessageWhatsapp } from '../../services/whatsapp';
+import { sendDataGoogleSheets } from '../../services/googleSheets.ts';
 import { modalOverlayStyle, modalStyle } from './styles.ts';
 import { showEventTooltip } from '../../utils/showEventTooltip.ts';
 import {
@@ -162,6 +163,11 @@ const Calendar = () => {
       } else {
         console.log(messageNewEvent);
         await sendMessageWhatsapp(messageNewEvent, user.id_group_whatsapp);
+        try {
+          await sendDataGoogleSheets(messageNewEvent);
+        } catch (err) {
+          console.warn('Erro ao enviar para o Google Sheets (ignorado):', err);
+        }
       }
 
       const newPoints = user.points - pointsToDeduct;
@@ -245,6 +251,14 @@ const Calendar = () => {
         if (deleteMsg) {
           console.log('deleteMsg', deleteMsg);
           await sendMessageWhatsapp(deleteMsg, user.id_group_whatsapp);
+          try {
+            await sendDataGoogleSheets(deleteMsg);
+          } catch (err) {
+            console.warn(
+              'Erro ao enviar para o Google Sheets (ignorado):',
+              err
+            );
+          }
         }
       }
     } catch (error) {
