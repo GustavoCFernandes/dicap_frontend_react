@@ -3,6 +3,7 @@ const urlScriptSheets = process.env.REACT_APP_API_GOOGLE_SHEETS_URL_SCRIPT as st
 export async function sendDataGoogleSheets(event: string) {
   const headers = new Headers();
   headers.append('Content-Type', 'text/plain;charset=utf-8');
+  headers.append('Access-Control-Allow-Origin', '*');
 
   const options = {
     method: 'POST',
