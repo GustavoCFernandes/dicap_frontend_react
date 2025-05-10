@@ -27,64 +27,7 @@ import {
   ErrorAlert,
 } from '../../utils/messageEvent.ts';
 import Loader from '../../components/Loader.jsx';
-
-const TimeSelector = ({ selectedDate, onChange, label }) => {
-  const hours = Array.from({ length: 24 }, (_, i) => i);
-  const minutes = [0, 30];
-
-  const currentValue = DateTime.fromISO(selectedDate);
-
-  return (
-    <div className='d-flex flex-column align-items-start mb-2'>
-      <label className='mb-1'>{label}</label>
-      <input
-        type='date'
-        value={currentValue.toFormat('yyyy-MM-dd')}
-        onChange={(e) => {
-          const newDate = DateTime.fromISO(e.target.value).set({
-            hour: currentValue.hour,
-            minute: currentValue.minute,
-          });
-          onChange(newDate.toFormat("yyyy-MM-dd'T'HH:mm"));
-        }}
-      />
-      <div className='d-flex gap-2 mt-1'>
-        <select
-          value={currentValue.hour}
-          onChange={(e) => {
-            const newDate = currentValue.set({
-              hour: parseInt(e.target.value),
-            });
-            onChange(newDate.toFormat("yyyy-MM-dd'T'HH:mm"));
-          }}
-          className='form-select'
-        >
-          {hours.map((hour) => (
-            <option key={hour} value={hour}>
-              {hour.toString().padStart(2, '0')}:00
-            </option>
-          ))}
-        </select>
-        <select
-          value={currentValue.minute}
-          onChange={(e) => {
-            const newDate = currentValue.set({
-              minute: parseInt(e.target.value),
-            });
-            onChange(newDate.toFormat("yyyy-MM-dd'T'HH:mm"));
-          }}
-          className='form-select'
-        >
-          {minutes.map((minute) => (
-            <option key={minute} value={minute}>
-              {minute.toString().padStart(2, '0')}
-            </option>
-          ))}
-        </select>
-      </div>
-    </div>
-  );
-};
+import TimeSelector from './components/TimeSelector.jsx';
 
 const Calendar = () => {
   // const teacherId = process.env.REACT_APP_TEACHER_ID_1; // TEST
@@ -105,15 +48,6 @@ const Calendar = () => {
     start: '',
     end: '',
   });
-
-  // Função para arredondar para o intervalo de 30 minutos mais próximo
-  const roundToNearestThirtyMinutes = (dateStr) => {
-    if (!dateStr) return dateStr;
-    const date = DateTime.fromISO(dateStr);
-    const minutes = date.minute;
-    const roundedMinutes = Math.round(minutes / 30) * 30;
-    return date.set({ minute: roundedMinutes }).toFormat("yyyy-MM-dd'T'HH:mm");
-  };
 
   if (user) {
     stutentName = user.name;
@@ -341,17 +275,21 @@ const Calendar = () => {
         <div style={modalOverlayStyle}>
           <div style={modalStyle}>
             <h2>Novo Agendamento</h2>
-            <h5 className='my-3'>{fullNameEvent}</h5>
 
             <TimeSelector
               selectedDate={newEvent.start}
               onChange={(newStart) => {
+                const startDate = DateTime.fromISO(newStart);
+                const endDate = DateTime.fromISO(newEvent.end);
+
                 let newEnd = newEvent.end;
-                if (newEnd && newStart > newEnd) {
-                  newEnd = DateTime.fromISO(newStart)
+
+                if (startDate.toISO() === endDate.toISO()) {
+                  newEnd = startDate
                     .plus({ minutes: 30 })
                     .toFormat("yyyy-MM-dd'T'HH:mm");
                 }
+
                 setNewEvent({
                   ...newEvent,
                   start: newStart,
@@ -359,6 +297,7 @@ const Calendar = () => {
                 });
               }}
               label='Horário de Início'
+              isShowData={true}
             />
 
             <TimeSelector
