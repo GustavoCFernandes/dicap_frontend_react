@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { DateTime } from 'luxon';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
@@ -28,6 +28,7 @@ import {
 } from '../../utils/messageEvent.ts';
 import Loader from '../../components/Loader.jsx';
 import TimeSelector from './components/TimeSelector.jsx';
+import useCalendarPolling from '../../hooks/useCalendarPolling';
 
 const Calendar = () => {
   // const teacherId = process.env.REACT_APP_TEACHER_ID_1; // TEST
@@ -60,6 +61,8 @@ const Calendar = () => {
     try {
       const data = await graphCalendar(teacherId);
 
+      console.log('data:', data);
+
       const formatted = data.value.map((event) => ({
         id: event.id,
         title: event.subject,
@@ -77,9 +80,7 @@ const Calendar = () => {
     }
   }, [teacherId]);
 
-  useEffect(() => {
-    fetchEvents();
-  }, [fetchEvents, events]);
+  useCalendarPolling(fetchEvents, 3000, [teacherId]);
 
   // Criar evento via Graph
   const handleCreateEvent = async () => {
