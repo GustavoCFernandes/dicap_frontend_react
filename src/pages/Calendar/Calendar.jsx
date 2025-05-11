@@ -59,26 +59,31 @@ const Calendar = () => {
   // Buscar eventos do Graph
   const fetchEvents = React.useCallback(async () => {
     try {
-      const data = await graphCalendar(teacherId);
+      const events = await graphCalendar(teacherId);
 
-      console.log('data:', data);
+      const normalize = (str) => str?.trim().toLowerCase();
 
-      const formatted = data.value.map((event) => ({
-        id: event.id,
-        title: event.subject,
-        start: DateTime.fromISO(event.start.dateTime, { zone: 'utc' })
-          .setZone('America/Sao_Paulo')
-          .toISO(),
-        end: DateTime.fromISO(event.end.dateTime, { zone: 'utc' })
-          .setZone('America/Sao_Paulo')
-          .toISO(),
-      }));
+      const formatted = events.value.map((event) => {
+        const isUnavailable =
+          normalize(event.subject) !== normalize(fullNameEvent);
+
+        return {
+          id: event.id,
+          title: isUnavailable ? 'Indisponível' : event.subject,
+          start: DateTime.fromISO(event.start.dateTime, { zone: 'utc' })
+            .setZone('America/Sao_Paulo')
+            .toISO(),
+          end: DateTime.fromISO(event.end.dateTime, { zone: 'utc' })
+            .setZone('America/Sao_Paulo')
+            .toISO(),
+        };
+      });
 
       setEvents(formatted);
     } catch (err) {
       console.error('Erro ao buscar eventos:', err);
     }
-  }, [teacherId]);
+  }, [teacherId, fullNameEvent]);
 
   useCalendarPolling(fetchEvents, 3000, [teacherId]);
 
