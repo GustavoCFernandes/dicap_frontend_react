@@ -72,7 +72,8 @@ const Calendar = () => {
 
         return {
           id: event.id,
-          title: isUnavailable ? 'Indisponível' : event.subject,
+          //title: isUnavailable ? 'Indisponível' : event.subject,
+          title: isUnavailable ? event.subject : event.subject,
           start: DateTime.fromISO(event.start.dateTime, { zone: 'utc' })
             .setZone('America/Sao_Paulo')
             .toISO(),

@@ -11,32 +11,28 @@ function getToken() {
 }
 
 function getParamsGraphCalendar() {
-   const today = new Date();
+  const today = new Date();
+  const daysDisplayed = 15
 
-   // Começo da semana (domingo)
-   const startOfWeek = new Date(today);
-   const dayOfWeek = today.getDay(); // 0 (domingo) a 6 (sábado)
-   startOfWeek.setDate(today.getDate() - dayOfWeek);
-   startOfWeek.setHours(0, 0, 0, 0);
+  const startOfWeek = new Date(today);
+  const dayOfWeek = today.getDay();
+  startOfWeek.setDate(today.getDate() - dayOfWeek);
+  startOfWeek.setHours(0, 0, 0, 0);
 
-   // Fim do intervalo (30 dias após o domingo)
-   const endDate = new Date(startOfWeek);
-   endDate.setDate(startOfWeek.getDate() + 30);
-   endDate.setHours(23, 59, 59, 999);
+  const endDate = new Date(startOfWeek);
+  endDate.setDate(startOfWeek.getDate() + daysDisplayed);
+  endDate.setHours(23, 59, 59, 999);
 
-   function toISOStringNoMs(date) {
-     return date.toISOString().split('.')[0] + 'Z';
-   }
+  function toISOStringNoMs(date) {
+    return date.toISOString().slice(0, 19) + 'Z';
+  }
 
-   const startDateTime = toISOStringNoMs(startOfWeek);
-   const endDateTime = toISOStringNoMs(endDate);
+  const startDateTime = toISOStringNoMs(startOfWeek);
+  const endDateTime = toISOStringNoMs(endDate);
 
-   return `?startDateTime=${startDateTime}
-    &endDateTime=${endDateTime}
-    &$filter=isCancelled eq false
-    &$orderby=start/dateTime desc
-    &$top=500`;
+  return `?startDateTime=${startDateTime}&endDateTime=${endDateTime}&$filter=isCancelled eq false&$top=500`;
 }
+
 
 
 export async function generetedAccessTokenGraphToBakend() {
