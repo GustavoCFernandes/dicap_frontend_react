@@ -315,12 +315,15 @@ const Calendar = () => {
                 // 1. End time is not set yet
                 // 2. End time is before or equal to start time
                 // 3. End time is on a different day
-                const shouldAdjustEnd = !newEvent.end ||
+                const shouldAdjustEnd =
+                  !newEvent.end ||
                   endDate <= startDate ||
                   endDate.toISODate() !== startDate.toISODate();
 
                 const newEnd = shouldAdjustEnd
-                  ? startDate.plus({ minutes: 30 }).toFormat("yyyy-MM-dd'T'HH:mm")
+                  ? startDate
+                      .plus({ minutes: 30 })
+                      .toFormat("yyyy-MM-dd'T'HH:mm")
                   : endDate
                       .set({
                         year: startDate.year,

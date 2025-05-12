@@ -23,6 +23,11 @@ export function formatUnavailableEvents(
     overlap: false,
   }
 ): CalendarEvent[] {
+
+  if (!unavailableTimes || unavailableTimes.length === 0) {
+    return [];
+  }
+
   return unavailableTimes.map((time) => ({
     ...config,
     ...time,
