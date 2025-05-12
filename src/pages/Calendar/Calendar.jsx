@@ -135,6 +135,26 @@ const Calendar = () => {
         return;
       }
 
+      // Verifica se o horário conflita com os horários indisponíveis do professor
+      const isUnavailable = teacherUnavailableTimes?.some((time) => {
+        const unavailableStart = DateTime.fromISO(time.start).toISO();
+        const unavailableEnd = DateTime.fromISO(time.end).toISO();
+
+        return (
+          (newStart.toISO() >= unavailableStart &&
+            newStart.toISO() < unavailableEnd) ||
+          (newEnd.toISO() > unavailableStart &&
+            newEnd.toISO() <= unavailableEnd) ||
+          (newStart.toISO() <= unavailableStart &&
+            newEnd.toISO() >= unavailableEnd)
+        );
+      });
+
+      if (isUnavailable) {
+        ErrorAlert('Este horário não está disponível para agendamento.');
+        return;
+      }
+
       const eventCalendar = {
         subject: fullNameEvent,
         start: {
