@@ -8,8 +8,11 @@ export const useStore = create(
       isLoading: false,
       teacherId: null,
       teacherName: null,
+      teacherUnavailableTimes: null,
       setTeacherId: (id) => set({ teacherId: id }),
       setTeacherName: (name) => set({ teacherName: name }),
+      setTeacherUnavailableTimes: (unavailableTimes) =>
+        set({ teacherUnavailableTimes: unavailableTimes }),
       setLoading: (loadingValue) => set({ isLoading: loadingValue }),
       setUser: (user) => set({ user }),
       logout: () => set({ user: null, teacherId: null }),

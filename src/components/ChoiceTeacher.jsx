@@ -7,12 +7,19 @@ import { useEffect, useState } from 'react';
 
 const ChoiceTeacher = () => {
   const navigate = useNavigate();
-  const { setLoading, setTeacherId, setTeacherName } = useStore();
+  const {
+    setLoading,
+    setTeacherId,
+    setTeacherName,
+    setTeacherUnavailableTimes,
+  } = useStore();
   const [teachers, setTeachers] = useState([]);
 
-  const handleCardClick = (teacherId, teacherName) => {
+  const handleCardClick = (teacherId, teacherName, teacherUnavailableTimes) => {
     setTeacherName(teacherName);
     setTeacherId(teacherId);
+    setTeacherUnavailableTimes(teacherUnavailableTimes);
+
     navigate('/agenda');
     setLoading(true);
   };
@@ -51,7 +58,8 @@ const ChoiceTeacher = () => {
                 onClick={() =>
                   handleCardClick(
                     teacher.id_object_azure_microsoft,
-                    teacher.name
+                    teacher.name,
+                    teacher.unavailable_times
                   )
                 }
                 style={{ cursor: 'pointer' }}

@@ -29,13 +29,14 @@ import {
 import Loader from '../../components/Loader.jsx';
 import TimeSelector from './components/TimeSelector.jsx';
 import useCalendarPolling from '../../hooks/useCalendarPolling';
+import { formatUnavailableEvents } from '../../utils/formatUnavailableEvents.ts';
 
 const Calendar = () => {
   // const teacherId = process.env.REACT_APP_TEACHER_ID_1; // TEST
   let stutentName = 'Estudante';
   let enterprise = 'Empresa';
   let fullNameEvent = '';
-  const { user, setUser, teacherId } = useStore();
+  const { user, setUser, teacherId, teacherUnavailableTimes } = useStore();
   const [showChoiceModal, setShowChoiceModal] = useState(false);
   const [tempStart, setTempStart] = useState('');
   const [tempEnd, setTempEnd] = useState('');
@@ -49,6 +50,8 @@ const Calendar = () => {
     start: '',
     end: '',
   });
+
+  const unavailableTimes = formatUnavailableEvents(teacherUnavailableTimes);
 
   if (user) {
     stutentName = user.name;
@@ -377,7 +380,7 @@ const Calendar = () => {
           <FullCalendar
             plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
             initialView='timeGridWeek'
-            events={events}
+            events={[...events, ...unavailableTimes]}
             locales={allLocales}
             locale='pt-br'
             timeZone='America/Sao_Paulo'
