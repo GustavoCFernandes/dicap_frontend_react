@@ -311,13 +311,14 @@ const Calendar = () => {
                 const startDate = DateTime.fromISO(newStart);
                 const endDate = DateTime.fromISO(newEvent.end);
 
-                let newEnd = newEvent.end;
-
-                if (startDate.toISO() === endDate.toISO()) {
-                  newEnd = startDate
-                    .plus({ minutes: 30 })
-                    .toFormat("yyyy-MM-dd'T'HH:mm");
-                }
+                // Garante que a data final seja igual à data inicial
+                const newEnd = endDate
+                  .set({
+                    year: startDate.year,
+                    month: startDate.month,
+                    day: startDate.day,
+                  })
+                  .toFormat("yyyy-MM-dd'T'HH:mm");
 
                 setNewEvent({
                   ...newEvent,
@@ -332,17 +333,36 @@ const Calendar = () => {
             <TimeSelector
               selectedDate={newEvent.end}
               onChange={(newEnd) => {
-                let newStart = newEvent.start;
-                if (newStart && newEnd < newStart) {
-                  newStart = DateTime.fromISO(newEnd)
+                const startDate = DateTime.fromISO(newEvent.start);
+                const endDate = DateTime.fromISO(newEnd);
+
+                // Garante que a data final seja igual à data inicial
+                const adjustedEnd = endDate
+                  .set({
+                    year: startDate.year,
+                    month: startDate.month,
+                    day: startDate.day,
+                  })
+                  .toFormat("yyyy-MM-dd'T'HH:mm");
+
+                // Se o horário final for menor que o inicial, ajusta o horário inicial
+                if (endDate.hour < startDate.hour ||
+                    (endDate.hour === startDate.hour && endDate.minute < startDate.minute)) {
+                  const newStart = startDate
                     .minus({ minutes: 30 })
                     .toFormat("yyyy-MM-dd'T'HH:mm");
+
+                  setNewEvent({
+                    ...newEvent,
+                    start: newStart,
+                    end: adjustedEnd,
+                  });
+                } else {
+                  setNewEvent({
+                    ...newEvent,
+                    end: adjustedEnd,
+                  });
                 }
-                setNewEvent({
-                  ...newEvent,
-                  start: newStart,
-                  end: newEnd,
-                });
               }}
               label='Horário de Término'
             />
