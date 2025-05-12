@@ -22,10 +22,10 @@ export function messageDeleteEvent(event) {
   )} das ${start.toFormat('HH:mm')} às ${end.toFormat('HH:mm')}.`;
 }
 
-export function ErrorAlert(msg) {
-    Swal.fire({
-      icon: 'error',
-      title: 'Oops...',
-      text: msg,
-    });
-  }
+export async function ErrorAlert(msg: string) {
+  await Swal.fire({
+    icon: 'error',
+    title: 'Oops...',
+    text: msg,
+  });
+}

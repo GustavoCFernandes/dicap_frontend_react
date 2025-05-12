@@ -414,10 +414,18 @@ const Calendar = () => {
               setTempEnd(end);
               setShowChoiceModal(true);
             }}
-            eventClick={(info) => {
+            eventClick={async (info) => {
               // Verifica se o evento é do usuário
+
+              if (info.event.title === 'Indisponível') {
+                await ErrorAlert('Esse horário não está disponível.');
+                setShowChoiceModal(false);
+                return;
+              }
+
               if (info.event.title !== fullNameEvent) {
                 ErrorAlert('Você só pode excluir seus próprios eventos.');
+                setShowChoiceModal(false);
                 return;
               }
 
