@@ -311,14 +311,23 @@ const Calendar = () => {
                 const startDate = DateTime.fromISO(newStart);
                 const endDate = DateTime.fromISO(newEvent.end);
 
-                // Garante que a data final seja igual à data inicial
-                const newEnd = endDate
-                  .set({
-                    year: startDate.year,
-                    month: startDate.month,
-                    day: startDate.day,
-                  })
-                  .toFormat("yyyy-MM-dd'T'HH:mm");
+                // Set end time to 30 minutes after start time if:
+                // 1. End time is not set yet
+                // 2. End time is before or equal to start time
+                // 3. End time is on a different day
+                const shouldAdjustEnd = !newEvent.end ||
+                  endDate <= startDate ||
+                  endDate.toISODate() !== startDate.toISODate();
+
+                const newEnd = shouldAdjustEnd
+                  ? startDate.plus({ minutes: 30 }).toFormat("yyyy-MM-dd'T'HH:mm")
+                  : endDate
+                      .set({
+                        year: startDate.year,
+                        month: startDate.month,
+                        day: startDate.day,
+                      })
+                      .toFormat("yyyy-MM-dd'T'HH:mm");
 
                 setNewEvent({
                   ...newEvent,
@@ -336,28 +345,29 @@ const Calendar = () => {
                 const startDate = DateTime.fromISO(newEvent.start);
                 const endDate = DateTime.fromISO(newEnd);
 
-                // Garante que a data final seja igual à data inicial
-                const adjustedEnd = endDate
-                  .set({
-                    year: startDate.year,
-                    month: startDate.month,
-                    day: startDate.day,
-                  })
-                  .toFormat("yyyy-MM-dd'T'HH:mm");
-
-                // Se o horário final for menor que o inicial, ajusta o horário inicial
-                if (endDate.hour < startDate.hour ||
-                    (endDate.hour === startDate.hour && endDate.minute < startDate.minute)) {
-                  const newStart = startDate
-                    .minus({ minutes: 30 })
+                if (endDate <= startDate) {
+                  const adjustedEnd = startDate
+                    .plus({ minutes: 30 })
+                    .set({
+                      year: startDate.year,
+                      month: startDate.month,
+                      day: startDate.day,
+                    })
                     .toFormat("yyyy-MM-dd'T'HH:mm");
 
                   setNewEvent({
                     ...newEvent,
-                    start: newStart,
                     end: adjustedEnd,
                   });
                 } else {
+                  const adjustedEnd = endDate
+                    .set({
+                      year: startDate.year,
+                      month: startDate.month,
+                      day: startDate.day,
+                    })
+                    .toFormat("yyyy-MM-dd'T'HH:mm");
+
                   setNewEvent({
                     ...newEvent,
                     end: adjustedEnd,
