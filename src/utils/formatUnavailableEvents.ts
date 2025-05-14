@@ -1,18 +1,8 @@
-// utils/formatUnavailableEvents.ts
-
-type UnavailableTime = {
-  start: string;
-  end: string;
-};
-
-type EventConfig = {
-  title?: string;
-  display?: string;
-  color?: string;
-  overlap?: boolean;
-};
-
-type CalendarEvent = UnavailableTime & Required<EventConfig>;
+import {
+  UnavailableTime,
+  EventConfig,
+  CalendarEvent,
+} from '../types/calendarEvent';
 
 export function formatUnavailableEvents(
   unavailableTimes: UnavailableTime[],
@@ -23,7 +13,6 @@ export function formatUnavailableEvents(
     overlap: false,
   }
 ): CalendarEvent[] {
-
   if (!unavailableTimes || unavailableTimes.length === 0) {
     return [];
   }

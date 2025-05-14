@@ -29,7 +29,7 @@ const Login = () => {
         }
 
         if (response.auth) {
-          navigate('/escolha/professor');
+          navigate('/agenda');
         }
       })
       .catch((error) => {

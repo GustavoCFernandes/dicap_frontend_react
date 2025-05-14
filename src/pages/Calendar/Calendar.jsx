@@ -30,13 +30,14 @@ import Loader from '../../components/Loader.jsx';
 import TimeSelector from './components/TimeSelector.jsx';
 import useCalendarPolling from '../../hooks/useCalendarPolling';
 import { formatUnavailableEvents } from '../../utils/formatUnavailableEvents.ts';
+import { FilterEventsCalendar } from '../../utils/filterEventsCalendar.ts';
 
 const Calendar = () => {
-  // const teacherId = process.env.REACT_APP_TEACHER_ID_1; // TEST
+  const teacherId = process.env.REACT_APP_ID_MICROSFOT_AZURE;
   let stutentName = 'Estudante';
   let enterprise = 'Empresa';
   let fullNameEvent = '';
-  const { user, setUser, teacherId, teacherUnavailableTimes } = useStore();
+  const { user, setUser, teacherUnavailableTimes } = useStore();
   const [showChoiceModal, setShowChoiceModal] = useState(false);
   const [tempStart, setTempStart] = useState('');
   const [tempEnd, setTempEnd] = useState('');
@@ -83,7 +84,8 @@ const Calendar = () => {
         };
       });
 
-      setEvents(formatted);
+      const filtered = FilterEventsCalendar(formatted);
+      setEvents(filtered);
     } catch (err) {
       console.error('Erro ao buscar eventos:', err);
     }
