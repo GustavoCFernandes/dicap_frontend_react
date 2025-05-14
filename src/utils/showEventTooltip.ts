@@ -13,8 +13,6 @@ export function showEventTooltip(info) {
     .setZone('America/Sao_Paulo')
     .toFormat('dd/MM/yyyy HH:mm');
 
-  //const description = extendedProps?.description || 'Sem descrição';
-
   tippy(info.el, {
     content: `
       <strong>${title}</strong><br/>

@@ -1,8 +1,4 @@
 import { graphApplicationConfig } from '../authConfig';
-/**
- * Attaches a given access token to a MS Graph API call. Returns information about the user
- * @param accessToken
- */
 
 function getToken() {
   const token = localStorage.getItem('accessToken');
@@ -32,8 +28,6 @@ function getParamsGraphCalendar() {
 
   return `?startDateTime=${startDateTime}&endDateTime=${endDateTime}&$filter=isCancelled eq false&$top=500`;
 }
-
-
 
 export async function generetedAccessTokenGraphToBakend() {
   const headers = new Headers();

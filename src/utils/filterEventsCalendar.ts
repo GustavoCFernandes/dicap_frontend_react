@@ -6,16 +6,13 @@ export function FilterEventsCalendar(
 ): CalendarEventFormat[] {
   const timePoints: { time: number; type: 'start' | 'end' }[] = [];
 
-  // Etapa 1: transformar eventos em pontos de tempo
   for (const event of events) {
     timePoints.push({ time: new Date(event.start).getTime(), type: 'start' });
     timePoints.push({ time: new Date(event.end).getTime(), type: 'end' });
   }
 
-  // Etapa 2: ordenar os pontos de tempo
   timePoints.sort((a, b) => {
     if (a.time === b.time) {
-      // Prioriza fim antes de início no mesmo instante
       return a.type === 'end' ? -1 : 1;
     }
     return a.time - b.time;
@@ -25,7 +22,6 @@ export function FilterEventsCalendar(
   let activeCount = 0;
   let intervalStart: number | null = null;
 
-  // Etapa 3: percorrer os pontos e identificar intervalos com 4+ eventos simultâneos
   for (const point of timePoints) {
     if (point.type === 'start') {
       activeCount++;
@@ -43,7 +39,6 @@ export function FilterEventsCalendar(
     }
   }
 
-  // Etapa 4: criar eventos "Indisponível"
   const unavailableEvents: CalendarEventFormat[] = unavailableIntervals.map(
     (interval, index) => ({
       id: `unavailable-${index}`,

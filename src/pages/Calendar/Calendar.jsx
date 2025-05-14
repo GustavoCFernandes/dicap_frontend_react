@@ -60,7 +60,6 @@ const Calendar = () => {
     fullNameEvent = `${stutentName}/${enterprise} (SA)`;
   }
 
-  // Buscar eventos do Graph
   const fetchEvents = React.useCallback(async () => {
     try {
       const events = await graphCalendar(teacherId);
@@ -93,7 +92,6 @@ const Calendar = () => {
 
   useCalendarPolling(fetchEvents, 3000, [teacherId]);
 
-  // Criar evento via Graph
   const handleCreateEvent = async () => {
     setIsSubmitting(true);
     try {
@@ -472,7 +470,6 @@ const Calendar = () => {
             }}
             eventClick={async (info) => {
               // Verifica se o evento é do usuário
-
               if (info.event.title === 'Indisponível') {
                 await ErrorAlert('Esse horário não está disponível.');
                 setShowChoiceModal(false);
