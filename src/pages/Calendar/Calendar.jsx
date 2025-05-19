@@ -29,8 +29,8 @@ import {
 import Loader from '../../components/Loader.jsx';
 import TimeSelector from './components/TimeSelector.jsx';
 import useCalendarPolling from '../../hooks/useCalendarPolling';
-import { formatUnavailableEvents } from '../../utils/formatUnavailableEvents.ts';
 import { FilterEventsCalendar } from '../../utils/filterEventsCalendar.ts';
+import { fetchAllUnavailableTimes } from '../../utils/filterTeachersUnavailableTimes.ts';
 
 const Calendar = () => {
   const teacherId = process.env.REACT_APP_ID_MICROSFOT_AZURE;
@@ -45,14 +45,13 @@ const Calendar = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [events, setEvents] = useState([]);
+  const [showCalendar, setShowCalendar] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [newEvent, setNewEvent] = useState({
     subject: '',
     start: '',
     end: '',
   });
-
-  const unavailableTimes = formatUnavailableEvents(teacherUnavailableTimes);
 
   if (user) {
     stutentName = user.name;
@@ -83,8 +82,32 @@ const Calendar = () => {
         };
       });
 
-      const filtered = FilterEventsCalendar(formatted);
-      setEvents(filtered);
+      const unavailableTimes = await fetchAllUnavailableTimes();
+      const combinedBusySchedule = [...unavailableTimes, ...formatted];
+
+      const params = new URLSearchParams(window.location.search);
+      const typeParam = params.get('tipo'); // ex: ?tipo=teams
+      const filtered = FilterEventsCalendar(combinedBusySchedule);
+
+      //setEvents(filtered);
+      //setEvents(formatted); // agenda teams todos professores sem horários indisponíveis
+      //setEvents(unavailableTimes); // horários indisponíveis de todos professores
+      //setEvents(combinedBusySchedule); // agenda teams todos professores + horários indisponíveis de todos professores
+      switch (typeParam) {
+        case 'teams':
+          setEvents(formatted);
+          break;
+        case 'indisponivel':
+          setEvents(unavailableTimes);
+          break;
+        case 'teamsEindisponivel':
+          setEvents(combinedBusySchedule);
+          break;
+        default:
+          setEvents(filtered); // Sem parâmetro ou valor desconhecido
+      }
+
+      setShowCalendar(true);
     } catch (err) {
       console.error('Erro ao buscar eventos:', err);
     }
@@ -430,11 +453,11 @@ const Calendar = () => {
       )}
 
       <div>
-        {events.length !== 0 ? (
+        {showCalendar ? (
           <FullCalendar
             plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
             initialView='timeGridWeek'
-            events={[...events, ...unavailableTimes]}
+            events={events}
             locales={allLocales}
             locale='pt-br'
             timeZone='America/Sao_Paulo'
@@ -455,6 +478,7 @@ const Calendar = () => {
             eventDidMount={showEventTooltip}
             nowIndicator={true}
             height='auto'
+            eventColor='#ec775e'
             dateClick={(info) => {
               const start = DateTime.fromISO(info.dateStr)
                 .set({ hour: 7, minute: 0 })
