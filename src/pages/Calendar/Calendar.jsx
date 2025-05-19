@@ -142,22 +142,32 @@ const Calendar = () => {
         return;
       }
 
-      const isConflict = events.some((e) => {
-        const existingStart = DateTime.fromISO(e.start).toISO();
-        const existingEnd = DateTime.fromISO(e.end).toISO();
+      const isConflictWithBusySchedule = events.some((e) => {
+        const existingStart = DateTime.fromISO(e.start, { zone: 'utc' });
+        const existingEnd = DateTime.fromISO(e.end, { zone: 'utc' });
+        const newStartLocal = DateTime.fromISO(newEvent.start, { zone: 'utc' });
+        const newEndLocal = DateTime.fromISO(newEvent.end, { zone: 'utc' });
+
+        //console.log('newStart:', newStartLocal.toISO());
+        //console.log('newEnd:', newEndLocal.toISO());
+        //console.log('existingStart:', existingStart.toISO());
+        //console.log('existingEnd:', existingEnd.toISO());
 
         return (
-          (newStart.toISO() >= existingStart &&
-            newStart.toISO() < existingEnd) ||
-          (newEnd.toISO() > existingStart && newEnd.toISO() <= existingEnd) ||
-          (newStart.toISO() <= existingStart && newEnd.toISO() >= existingEnd)
+          (newStartLocal >= existingStart && newStartLocal < existingEnd) ||
+          (newEndLocal > existingStart && newEndLocal <= existingEnd) ||
+          (newStartLocal < existingEnd && newEndLocal > existingStart)
         );
       });
 
-      if (isConflict) {
-        ErrorAlert('Já existe um evento agendado nesse horário.');
+      if (isConflictWithBusySchedule) {
+        ErrorAlert('Este horário já está ocupado.');
         return;
       }
+
+      console.log('isConflictWithBusySchedule:', isConflictWithBusySchedule);
+
+      if (true) return;
 
       // Verifica se o horário conflita com os horários indisponíveis do professor
       const isUnavailable = teacherUnavailableTimes?.some((time) => {
