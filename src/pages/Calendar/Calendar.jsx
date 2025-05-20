@@ -30,7 +30,14 @@ import Loader from '../../components/Loader.jsx';
 import TimeSelector from './components/TimeSelector.jsx';
 import useCalendarPolling from '../../hooks/useCalendarPolling';
 import { FilterEventsCalendar } from '../../utils/filterEventsCalendar.ts';
-import { fetchAllUnavailableTimes } from '../../utils/filterTeachersUnavailableTimes.ts';
+import {
+  pickTeacherByPreference,
+  filterByName,
+} from '../../utils/pickTeacherByPreference.ts';
+import {
+  fetchAllUnavailableTimes,
+  fetchAllUnavailableTimesByName,
+} from '../../utils/filterTeachersUnavailableTimes.ts';
 
 const Calendar = () => {
   const teacherId = process.env.REACT_APP_ID_MICROSFOT_AZURE;
@@ -160,12 +167,29 @@ const Calendar = () => {
         );
       });
 
+      const unavailableTimesByNames = await fetchAllUnavailableTimesByName();
+
+      const teachersPick = [
+        { name: 'Jurandir Ferreira', preference: 5 },
+        { name: 'Renêe Sato', preference: 2 },
+        { name: 'Marlon Fernandes', preference: 1 },
+      ];
+
+      const chosenTeacher = pickTeacherByPreference(teachersPick);
+
+      const teacherUnavailabilitySchedule = filterByName(
+        unavailableTimesByNames,
+        chosenTeacher
+      );
+      console.log(
+        'teacherUnavailabilitySchedule:',
+        teacherUnavailabilitySchedule
+      );
+
       if (isConflictWithBusySchedule) {
         ErrorAlert('Este horário já está ocupado.');
         return;
       }
-
-      console.log('isConflictWithBusySchedule:', isConflictWithBusySchedule);
 
       if (true) return;
 

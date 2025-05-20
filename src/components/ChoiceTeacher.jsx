@@ -30,6 +30,8 @@ const ChoiceTeacher = () => {
     const fetchTeachers = async () => {
       try {
         const list = await listTeachers();
+
+        console.log('list:', list);
         setTeachers(list.data);
       } catch (error) {
         console.error('Erro ao buscar professores:', error);

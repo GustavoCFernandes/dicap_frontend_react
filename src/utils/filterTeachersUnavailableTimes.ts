@@ -71,3 +71,41 @@ export const fetchAllUnavailableTimes = async (): Promise<
     return [];
   }
 };
+
+export const fetchAllUnavailableTimesByName = async (): Promise<
+  { title: string; start: string; end: string }[]
+> => {
+  try {
+    const response = await listTeachers();
+
+    // Filtra só os professores ativos
+    const activeTeachers = response.data.filter(
+      (t: Teacher) => t.active_account
+    );
+
+    let allUnavailableTimesByName: {
+      title: string;
+      start: string;
+      end: string;
+    }[] = [];
+
+    activeTeachers.forEach((teacher) => {
+      const times = teacher.unavailable_times || [];
+      times.forEach((time) => {
+        allUnavailableTimesByName.push({
+          title: teacher.name,
+          start: time.start,
+          end: time.end,
+        });
+      });
+    });
+
+    return allUnavailableTimesByName;
+  } catch (error) {
+    console.error(
+      'Erro ao buscar unavailable times de todos os professores por nome:',
+      error
+    );
+    return [];
+  }
+};
