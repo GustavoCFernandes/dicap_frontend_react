@@ -30,10 +30,7 @@ import Loader from '../../components/Loader.jsx';
 import TimeSelector from './components/TimeSelector.jsx';
 import useCalendarPolling from '../../hooks/useCalendarPolling';
 import { FilterEventsCalendar } from '../../utils/filterEventsCalendar.ts';
-import {
-  pickTeacherByPreference,
-  filterByName,
-} from '../../utils/pickTeacherByPreference.ts';
+import { chooseAvailableTeacher } from '../../utils/pickTeacherByPreference.ts';
 import {
   fetchAllUnavailableTimes,
   fetchAllUnavailableTimesByName,
@@ -128,6 +125,8 @@ const Calendar = () => {
       const now = DateTime.local().plus({ hours: 2 });
       const newStart = DateTime.fromISO(newEvent.start);
       const newEnd = DateTime.fromISO(newEvent.end);
+      const newStartLocal = DateTime.fromISO(newEvent.start, { zone: 'utc' });
+      const newEndLocal = DateTime.fromISO(newEvent.end, { zone: 'utc' });
 
       const durationInMinutes = newEnd.diff(newStart, 'minutes').minutes;
       const pointsToDeduct = Math.ceil(durationInMinutes / 30);
@@ -152,8 +151,6 @@ const Calendar = () => {
       const isConflictWithBusySchedule = events.some((e) => {
         const existingStart = DateTime.fromISO(e.start, { zone: 'utc' });
         const existingEnd = DateTime.fromISO(e.end, { zone: 'utc' });
-        const newStartLocal = DateTime.fromISO(newEvent.start, { zone: 'utc' });
-        const newEndLocal = DateTime.fromISO(newEvent.end, { zone: 'utc' });
 
         //console.log('newStart:', newStartLocal.toISO());
         //console.log('newEnd:', newEndLocal.toISO());
@@ -170,28 +167,33 @@ const Calendar = () => {
       const unavailableTimesByNames = await fetchAllUnavailableTimesByName();
 
       const teachersPick = [
-        { name: 'Jurandir Ferreira', preference: 5 },
-        { name: 'Renêe Sato', preference: 2 },
-        { name: 'Marlon Fernandes', preference: 1 },
+        { name: 'Jurandir Ferreira', preference: 0 },
+        { name: 'Ayumi Sato', preference: 3 },
+        { name: 'Renêe Sato', preference: 0 },
+        { name: 'Marlon Fernandes', preference: 5 },
       ];
 
-      const chosenTeacher = pickTeacherByPreference(teachersPick);
+      const chosenTeacher = await chooseAvailableTeacher(
+        teachersPick,
+        newStartLocal,
+        newEndLocal,
+        unavailableTimesByNames
+      );
 
-      const teacherUnavailabilitySchedule = filterByName(
-        unavailableTimesByNames,
-        chosenTeacher
-      );
-      console.log(
-        'teacherUnavailabilitySchedule:',
-        teacherUnavailabilitySchedule
-      );
+      if (!chosenTeacher) {
+        console.log('Nenhum professor disponível nesse horário.');
+        return;
+      }
+
+      console.log('Professor escolhido:', chosenTeacher);
 
       if (isConflictWithBusySchedule) {
         ErrorAlert('Este horário já está ocupado.');
         return;
       }
 
-      if (true) return;
+      //testando
+      //if (true) return;
 
       // Verifica se o horário conflita com os horários indisponíveis do professor
       const isUnavailable = teacherUnavailableTimes?.some((time) => {
