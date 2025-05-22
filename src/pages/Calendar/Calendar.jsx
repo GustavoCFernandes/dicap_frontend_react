@@ -170,15 +170,8 @@ const Calendar = () => {
 
       const unavailableTimesByNames = await fetchAllUnavailableTimesByName();
 
-      const teachersPick = [
-        { name: 'Jurandir Ferreira', preference: 0 },
-        { name: 'Ayumi Sato', preference: 3 },
-        { name: 'Renêe Sato', preference: 0 },
-        { name: 'Marlon Fernandes', preference: 5 },
-      ];
-
       const chosenTeacher = await chooseAvailableTeacher(
-        teachersPick,
+        user.teachers_preferences,
         newStartLocal,
         newEndLocal,
         unavailableTimesByNames
