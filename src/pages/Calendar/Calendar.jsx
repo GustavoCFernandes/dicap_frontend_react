@@ -255,7 +255,11 @@ const Calendar = () => {
         return;
       } else {
         console.log(messageNewEvent);
-        await sendMessageWhatsapp(messageNewEvent, user.id_group_whatsapp);
+        try {
+          await sendMessageWhatsapp(messageNewEvent, user.id_group_whatsapp);
+        } catch (err) {
+          console.warn('Erro ao enviar mensagem (ignorado):', err);
+        }
         try {
           await sendDataGoogleSheets(messageNewEvent);
         } catch (err) {
@@ -343,7 +347,11 @@ const Calendar = () => {
         const deleteMsg = messageDeleteEvent(eventToDelete);
         if (deleteMsg) {
           console.log('deleteMsg', deleteMsg);
-          await sendMessageWhatsapp(deleteMsg, user.id_group_whatsapp);
+          try {
+            await sendMessageWhatsapp(deleteMsg, user.id_group_whatsapp);
+          } catch (err) {
+            console.warn('Erro ao enviar mensagem (ignorado):', err);
+          }
           try {
             await sendDataGoogleSheets(deleteMsg);
           } catch (err) {
