@@ -91,7 +91,10 @@ const Calendar = () => {
 
       const params = new URLSearchParams(window.location.search);
       const typeParam = params.get('tipo'); // ex: ?tipo=teams
-      const filtered = FilterEventsCalendar(combinedBusySchedule);
+      const filtered = FilterEventsCalendar(
+        combinedBusySchedule,
+        fullNameEvent
+      );
 
       //setEvents(filtered);
       //setEvents(formatted); // agenda teams todos professores sem horários indisponíveis
@@ -514,7 +517,6 @@ const Calendar = () => {
             eventDidMount={showEventTooltip}
             nowIndicator={true}
             height='auto'
-            eventColor='#ec775e'
             dateClick={(info) => {
               const start = DateTime.fromISO(info.dateStr)
                 .set({ hour: 7, minute: 0 })

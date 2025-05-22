@@ -13,6 +13,15 @@ export function showEventTooltip(info) {
     .setZone('America/Sao_Paulo')
     .toFormat('dd/MM/yyyy HH:mm');
 
+  if (title === 'Indisponível') {
+    info.el.style.backgroundColor = '#ff4d4f'; // vermelho
+    info.el.style.borderColor = '#ff4d4f';
+  }
+  //else if (title === fullNameEvent) {
+  //  info.el.style.backgroundColor = '#1890ff'; // azul
+  //  info.el.style.borderColor = '#1890ff';
+  //}
+
   tippy(info.el, {
     content: `
       <strong>${title}</strong><br/>

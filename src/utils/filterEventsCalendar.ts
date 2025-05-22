@@ -2,11 +2,22 @@ import { CalendarEventFormat } from '../types/calendarEvent';
 
 export function FilterEventsCalendar(
   events: CalendarEventFormat[],
-  count = 4
+  fullNameEvent: string
 ): CalendarEventFormat[] {
+  const ruleNumberUnavailableTeachers = 4;
   const timePoints: { time: number; type: 'start' | 'end' }[] = [];
 
-  for (const event of events) {
+  // 1. Encontrar o evento com o nome correspondente
+  const highlightedEvent = events.find(
+    (event) => event.title === fullNameEvent
+  );
+
+  // 2. Remover o evento do cálculo de indisponibilidade
+  const filteredEvents = events.filter(
+    (event) => event.title !== fullNameEvent
+  );
+
+  for (const event of filteredEvents) {
     timePoints.push({ time: new Date(event.start).getTime(), type: 'start' });
     timePoints.push({ time: new Date(event.end).getTime(), type: 'end' });
   }
@@ -25,11 +36,11 @@ export function FilterEventsCalendar(
   for (const point of timePoints) {
     if (point.type === 'start') {
       activeCount++;
-      if (activeCount === count) {
+      if (activeCount === ruleNumberUnavailableTeachers) {
         intervalStart = point.time;
       }
     } else {
-      if (activeCount === count) {
+      if (activeCount === ruleNumberUnavailableTeachers) {
         if (intervalStart !== null) {
           unavailableIntervals.push({ start: intervalStart, end: point.time });
           intervalStart = null;
@@ -52,5 +63,24 @@ export function FilterEventsCalendar(
     })
   );
 
-  return unavailableEvents;
+  // 3. Adicionar o evento real com ajuste de fuso horário
+  const result: CalendarEventFormat[] = [...unavailableEvents];
+
+  if (highlightedEvent) {
+    const timezoneOffset = new Date().getTimezoneOffset() * 60000;
+    result.push({
+      id: highlightedEvent.id,
+      title: fullNameEvent,
+      start: new Date(
+        new Date(highlightedEvent.start).getTime() - timezoneOffset
+      ).toISOString(),
+      end: new Date(
+        new Date(highlightedEvent.end).getTime() - timezoneOffset
+      ).toISOString(),
+    });
+  }
+
+  return result;
 }
+
+
