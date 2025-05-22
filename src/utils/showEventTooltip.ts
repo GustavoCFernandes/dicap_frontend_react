@@ -4,6 +4,7 @@ import { DateTime } from 'luxon';
 
 export function showEventTooltip(info) {
   const { title, startStr, endStr } = info.event;
+  const unavailableColor = '#ec775e';
 
   const startFormatted = DateTime.fromISO(startStr)
     .setZone('America/Sao_Paulo')
@@ -14,8 +15,8 @@ export function showEventTooltip(info) {
     .toFormat('dd/MM/yyyy HH:mm');
 
   if (title === 'Indisponível') {
-    info.el.style.backgroundColor = '#ff4d4f'; // vermelho
-    info.el.style.borderColor = '#ff4d4f';
+    info.el.style.backgroundColor = unavailableColor; // vermelho
+    info.el.style.borderColor = unavailableColor;
   }
   //else if (title === fullNameEvent) {
   //  info.el.style.backgroundColor = '#1890ff'; // azul
