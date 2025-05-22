@@ -35,6 +35,7 @@ import {
   fetchAllUnavailableTimes,
   fetchAllUnavailableTimesByName,
 } from '../../utils/filterTeachersUnavailableTimes.ts';
+import { showAutoCloseAlert } from '../../utils/showAutoCloseAlert.ts';
 
 const Calendar = () => {
   const teacherId = process.env.REACT_APP_ID_MICROSFOT_AZURE;
@@ -294,6 +295,7 @@ const Calendar = () => {
   };
 
   const handleDeleteEvent = async (eventCalendarId) => {
+    showAutoCloseAlert();
     try {
       //const threeHours = 300;
       const thoHours = 180;
