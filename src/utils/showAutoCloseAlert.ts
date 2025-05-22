@@ -5,7 +5,7 @@ export function showAutoCloseAlert(): void {
 
   Swal.fire({
     title: 'Deletando agendamento, aguarde por favor!',
-    timer: 20000,
+    timer: 30000,
     timerProgressBar: true,
     didOpen: () => {
       Swal.showLoading();

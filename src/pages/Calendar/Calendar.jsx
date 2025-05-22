@@ -466,6 +466,7 @@ const Calendar = () => {
             <button
               className='btn btn-danger m-3'
               onClick={() => setShowModal(false)}
+              disabled={isSubmitting}
             >
               Cancelar
             </button>
