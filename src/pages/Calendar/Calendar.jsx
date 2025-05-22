@@ -448,7 +448,7 @@ const Calendar = () => {
 
             {actionType === 'create' && (
               <button
-                className='btn btn-primary m-3'
+                className='btn btn-first m-3'
                 onClick={handleCreateEvent}
                 disabled={isSubmitting}
               >
@@ -457,7 +457,7 @@ const Calendar = () => {
             )}
 
             <button
-              className='btn btn-danger m-3'
+              className='btn btn-second m-3'
               onClick={() => setShowModal(false)}
               disabled={isSubmitting}
             >
@@ -471,7 +471,7 @@ const Calendar = () => {
           <div style={modalStyle} className='d-flex flex-column'>
             <h2>Você deseja agendar uma nova aula?</h2>
             <button
-              className='btn btn-primary m-2'
+              className='btn btn-first m-2'
               onClick={() => {
                 setNewEvent({
                   subject: '',
@@ -486,7 +486,7 @@ const Calendar = () => {
               Agendar aula
             </button>
             <button
-              className='btn btn-danger m-2'
+              className='btn btn-second  m-2'
               onClick={() => setShowChoiceModal(false)}
             >
               Cancelar
@@ -507,7 +507,7 @@ const Calendar = () => {
             headerToolbar={{
               left: 'prev,next today',
               center: 'title',
-              right: 'dayGridMonth,timeGridWeek,timeGridDay',
+              right: 'timeGridWeek,timeGridDay',
             }}
             slotLabelFormat={{
               hour: '2-digit',

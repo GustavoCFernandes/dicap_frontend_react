@@ -2,12 +2,33 @@
     --principal-a: #0A0438;
     --principal-b: #262A87;
     --principal-c: #F7FBFF;
+    --principal-b-light: #e5e8f8;
     --Font_Light: #3A3969;
     --select: #0A0438;
     --hover-2: #EB1A21;
     --fundo-1: #fff;
     --fundo-2: #FDE7DC;
     --fundo-3: #D3DCE9;
+}
+
+.btn-first{
+  background: var(--principal-c);
+  color: var(--principal-b);
+  border: 1px solid var(--principal-b);
+  font-weight: 700;
+}
+
+.btn-first:hover{
+  color: var(--principal-b);
+  background: var(--principal-b-light);
+}
+
+
+.btn-second:hover,
+.btn-second{
+  background: var(--principal-a);
+  color: var(--principal-c);
+  border: 1px solid var(--principal-b);
 }
 
 .icon-google {
@@ -125,7 +146,6 @@ h3 {
     margin-top: 1rem;
     width: 265px;
 }
-
 .btn-exit {
  background-color: var(--principal-a);
   color: var(--principal-c);
