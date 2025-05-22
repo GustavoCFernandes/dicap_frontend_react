@@ -34,10 +34,10 @@ export const fetchAllUnavailableTimes = async (): Promise<
   { id: number; title: string; start: string; end: string }[]
 > => {
   try {
-    const response = await listTeachers();
+    const teachers = await listTeachers();
 
     // Filtra só os professores ativos
-    const activeTeachers = response.data.filter(
+    const activeTeachers = teachers.data.filter(
       (t: Teacher) => t.active_account
     );
 
