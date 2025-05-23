@@ -8,7 +8,7 @@ export function FilterEventsCalendar(
   const timePoints: { time: number; type: 'start' | 'end' }[] = [];
 
   // 1. Encontrar o evento com o nome correspondente
-  const highlightedEvent = events.find(
+  const highlightedEvent = events.filter(
     (event) => event.title === fullNameEvent
   );
 
@@ -66,16 +66,16 @@ export function FilterEventsCalendar(
   // 3. Adicionar o evento real com ajuste de fuso horário
   const result: CalendarEventFormat[] = [...unavailableEvents];
 
-  if (highlightedEvent) {
-    const timezoneOffset = new Date().getTimezoneOffset() * 60000;
+  const timezoneOffset = new Date().getTimezoneOffset() * 60000;
+  for (const event of highlightedEvent) {
     result.push({
-      id: highlightedEvent.id,
-      title: fullNameEvent,
+      id: event.id,
+      title: event.title,
       start: new Date(
-        new Date(highlightedEvent.start).getTime() - timezoneOffset
+        new Date(event.start).getTime() - timezoneOffset
       ).toISOString(),
       end: new Date(
-        new Date(highlightedEvent.end).getTime() - timezoneOffset
+        new Date(event.end).getTime() - timezoneOffset
       ).toISOString(),
     });
   }

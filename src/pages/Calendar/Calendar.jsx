@@ -356,7 +356,6 @@ const Calendar = () => {
           });
         });
 
-        console.log('eventToDelete:', eventToDelete);
         const dataTimesFormated = extractEventTimeDelete(eventToDelete);
 
         const deleteMsg = messageDeleteEvent(eventToDelete);
