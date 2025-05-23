@@ -10,6 +10,7 @@ import {
   graphCreateEvent,
   graphDeleteEvent,
 } from '../../services/graph';
+import { addEventCalendar } from '../../services/eventsCalendar.js';
 import { useStore } from '../../stores/index';
 import HeaderCalendar from '../Calendar/HeaderCalendar.jsx';
 import {
@@ -31,6 +32,10 @@ import TimeSelector from './components/TimeSelector.jsx';
 import useCalendarPolling from '../../hooks/useCalendarPolling';
 import { FilterEventsCalendar } from '../../utils/filterEventsCalendar.ts';
 import { chooseAvailableTeacher } from '../../utils/pickTeacherByPreference.ts';
+import {
+  extractEventDateTime,
+  extractEventTimeDelete,
+} from '../../utils/messageEvent.ts';
 import {
   fetchAllUnavailableTimes,
   fetchAllUnavailableTimesByName,
@@ -182,7 +187,7 @@ const Calendar = () => {
         return;
       }
 
-      console.log('Professor escolhido:', chosenTeacher);
+      //console.log('Professor escolhido:', chosenTeacher);
 
       if (isConflictWithBusySchedule) {
         ErrorAlert('Este horário já está ocupado.');
@@ -242,6 +247,18 @@ const Calendar = () => {
         newEnd,
         fullNameEvent
       );
+
+      //Extraindo data formato dd/mm/aaaa
+      const _extractEventDateTime = extractEventDateTime(newStart);
+
+      await addEventCalendar({
+        type: 'create',
+        event: fullNameEvent,
+        responsible: chosenTeacher,
+        date: _extractEventDateTime,
+        start: newStart.toLocaleString(DateTime.TIME_SIMPLE),
+        end: newEnd.toLocaleString(DateTime.TIME_SIMPLE),
+      });
 
       const eventCreate = await graphCreateEvent(eventCalendar, teacherId);
       if (eventCreate.error) {
@@ -339,9 +356,20 @@ const Calendar = () => {
           });
         });
 
+        console.log('eventToDelete:', eventToDelete);
+        const dataTimesFormated = extractEventTimeDelete(eventToDelete);
+
         const deleteMsg = messageDeleteEvent(eventToDelete);
         if (deleteMsg) {
           console.log('deleteMsg', deleteMsg);
+          await addEventCalendar({
+            type: 'delete',
+            event: fullNameEvent,
+            responsible: 'Sem referencia na deleção de eventos',
+            date: dataTimesFormated.day,
+            start: dataTimesFormated.start,
+            end: dataTimesFormated.end,
+          });
           try {
             await sendMessageWhatsapp(deleteMsg, user.id_group_whatsapp);
           } catch (err) {
