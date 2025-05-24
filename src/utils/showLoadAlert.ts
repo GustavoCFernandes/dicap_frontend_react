@@ -1,11 +1,11 @@
 import Swal, { SweetAlertResult } from 'sweetalert2';
 
-export function showAutoCloseAlert(): void {
+export function showLoadAlert(text, time): void {
   let timerInterval: number;
 
   Swal.fire({
-    title: 'Deletando agendamento, aguarde por favor!',
-    timer: 30000,
+    title: text,
+    timer: time,
     timerProgressBar: true,
     didOpen: () => {
       Swal.showLoading();
