@@ -1,46 +1,57 @@
+// React e bibliotecas de terceiros
 import React, { useState } from 'react';
 import { DateTime } from 'luxon';
+import Swal from 'sweetalert2';
+
+// FullCalendar
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import allLocales from '@fullcalendar/core/locales-all';
+
+// Componentes do projeto
+import HeaderCalendar from '../Calendar/HeaderCalendar.jsx';
+import Loader from '../../components/Loader.jsx';
+import TimeSelector from './components/TimeSelector.jsx';
+
+// Hooks
+import useCalendarPolling from '../../hooks/useCalendarPolling';
+
+// Stores
+import { useStore } from '../../stores/index';
+
+// Services
 import {
   graphCalendar,
   graphCreateEvent,
   graphDeleteEvent,
 } from '../../services/graph';
 import { addEventCalendar } from '../../services/eventsCalendar.js';
-import { useStore } from '../../stores/index';
-import HeaderCalendar from '../Calendar/HeaderCalendar.jsx';
 import {
   updatePointsStudent,
   updateNumberAppointmentsStudent,
 } from '../../services/students';
-import Swal from 'sweetalert2';
 import { sendMessageWhatsapp } from '../../services/whatsapp';
 import { sendDataGoogleSheets } from '../../services/googleSheets.ts';
+
+// Utils
 import { modalOverlayStyle, modalStyle } from './styles.ts';
 import { showEventTooltip } from '../../utils/showEventTooltip.ts';
-import {
-  messageCreateNewEvent,
-  messageDeleteEvent,
-  ErrorAlert,
-} from '../../utils/messageEvent.ts';
-import Loader from '../../components/Loader.jsx';
-import TimeSelector from './components/TimeSelector.jsx';
-import useCalendarPolling from '../../hooks/useCalendarPolling';
+import { showAutoCloseAlert } from '../../utils/showAutoCloseAlert.ts';
 import { FilterEventsCalendar } from '../../utils/filterEventsCalendar.ts';
 import { chooseAvailableTeacher } from '../../utils/pickTeacherByPreference.ts';
 import {
   extractEventDateTime,
   extractEventTimeDelete,
+  messageCreateNewEvent,
+  messageDeleteEvent,
+  ErrorAlert,
 } from '../../utils/messageEvent.ts';
 import {
   fetchAllUnavailableTimes,
   fetchAllUnavailableTimesByName,
 } from '../../utils/filterTeachersUnavailableTimes.ts';
-import { showAutoCloseAlert } from '../../utils/showAutoCloseAlert.ts';
 
 const Calendar = () => {
   const teacherId = process.env.REACT_APP_ID_MICROSFOT_AZURE;
