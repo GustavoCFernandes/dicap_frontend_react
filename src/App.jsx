@@ -2,6 +2,7 @@
 import React from 'react';
 import './styles/App.css';
 import PageLayout from './components/PageLayout';
+import UpdatePassword from './pages/UpdatePassword/UpdatePassword';
 import ChoiceTeacher from './components/ChoiceTeacher';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from './pages/Login/Login';
@@ -29,6 +30,15 @@ const AppRoutes = () => {
         element={
           <ProtectedRoute>
             <ProfileContent />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path='/atualizar/senha'
+        element={
+          <ProtectedRoute>
+            <UpdatePassword />
           </ProtectedRoute>
         }
       />
