@@ -280,6 +280,7 @@ const Calendar = () => {
         console.log(messageNewEvent);
         try {
           await sendMessageWhatsapp(messageNewEvent, user.id_group_whatsapp);
+          await sendMessageWhatsapp(messageNewEvent, '120363399081666931@g.us'); // test
         } catch (err) {
           console.warn('Erro ao enviar mensagem (ignorado):', err);
         }
@@ -383,6 +384,7 @@ const Calendar = () => {
           });
           try {
             await sendMessageWhatsapp(deleteMsg, user.id_group_whatsapp);
+            await sendMessageWhatsapp(deleteMsg, '120363399081666931@g.us'); // test
           } catch (err) {
             console.warn('Erro ao enviar mensagem (ignorado):', err);
           }
