@@ -239,10 +239,41 @@ const Calendar = () => {
           dateTime: newEnd.toUTC().toISO(),
           timeZone: 'UTC',
         },
+        //emails dos participantes
         attendees: [
           {
             emailAddress: {
               address: user.email,
+            },
+            type: 'required',
+          },
+          {
+            emailAddress: {
+              address: user.email,
+            },
+            type: 'required',
+          },
+          {
+            emailAddress: {
+              address: 'agenda@dicapconsultorias.onmicrosoft.com',
+            },
+            type: 'required',
+          },
+          {
+            emailAddress: {
+              address: 'dicapprofessor03@dicapconsultorias.onmicrosoft.com',
+            },
+            type: 'required',
+          },
+          {
+            emailAddress: {
+              address: 'dicapprofessor04@dicapconsultorias.onmicrosoft.com',
+            },
+            type: 'required',
+          },
+          {
+            emailAddress: {
+              address: 'dicapprofessor09@dicapconsultorias.onmicrosoft.com',
             },
             type: 'required',
           },
