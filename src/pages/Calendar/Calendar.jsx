@@ -52,9 +52,11 @@ import {
   fetchAllUnavailableTimes,
   fetchAllUnavailableTimesByName,
 } from '../../utils/filterTeachersUnavailableTimes.ts';
+import { horariosIndidsponiveisJurandir } from './constants/horariosIndidsponiveisJurandir.js'
 
 const Calendar = () => {
   const teacherId = process.env.REACT_APP_ID_MICROSFOT_AZURE;
+  const indisponibilidadeJurandir = process.env.REACT_APP_INDISPONIBILIDADE_JURANDIR_MANUAL;
   let stutentName = 'Estudante';
   let enterprise = 'Empresa';
   let fullNameEvent = '';
@@ -73,6 +75,11 @@ const Calendar = () => {
     start: '',
     end: '',
   });
+  let additionalEvents = [...horariosIndidsponiveisJurandir];
+
+  if (indisponibilidadeJurandir !== 'true') {
+    additionalEvents = []
+  }
 
   if (user) {
     stutentName = user.name;
@@ -572,7 +579,10 @@ const Calendar = () => {
           <FullCalendar
             plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
             initialView='timeGridWeek'
-            events={events}
+            events={[
+              ...events,
+              ...additionalEvents
+            ]}
             locales={allLocales}
             locale='pt-br'
             timeZone='America/Sao_Paulo'

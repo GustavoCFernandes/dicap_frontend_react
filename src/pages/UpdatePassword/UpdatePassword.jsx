@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useStore } from '../../stores/index';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
+import { updatePasswordStudent } from '../../services/students'
 
 const UpdatePassword = () => {
   const navigate = useNavigate();
@@ -10,33 +11,43 @@ const UpdatePassword = () => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false); // <- aqui!
   const [errorValidate, setErrorValidate] = useState(false);
-  const { setLoading } = useStore();
+  const { user, setLoading } = useStore();
 
   const validatePasswords = async (e) => {
     e.preventDefault();
     setLoading(true);
 
-    const formData = {
-      password,
-      newPassword,
-    };
+    if (newPassword.length < 6) {
+      Swal.fire({
+        title: 'Senha inválida',
+        text: 'A nova senha deve ter pelo menos 6 caracteres.',
+        icon: 'error',
+      });
+      setLoading(false);
+      return false;
+    }
 
     if (password !== newPassword) {
       setErrorValidate(true);
       setLoading(false);
       return false;
     }
+
     setErrorValidate(false);
     setLoading(false);
-    console.log('formData', formData);
-    Swal.fire({
-      title: 'Senha atualizada!',
 
-      text: 'Senha atualizada com sucesso.',
-      icon: 'success',
-    }).then(() => {
-      navigate('/agenda');
+    await updatePasswordStudent(user.id, newPassword).then((res) => {
+      console.log('Resposta do servidor:', res);
+      Swal.fire({
+        title: 'Senha atualizada!',
+        text: 'Senha atualizada com sucesso.',
+        icon: 'success',
+      }).then(() => {
+        navigate('/agenda');
+      });
+      return res;
     });
+
     return true;
   };
 

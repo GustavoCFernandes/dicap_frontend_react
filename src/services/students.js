@@ -39,6 +39,29 @@ export async function loginStudent({ email, password }) {
     });
 }
 
+export async function updatePasswordStudent({ userId, password }) {
+  const headers = new Headers();
+  headers.append('Content-Type', 'application/json');
+
+  const options = {
+    method: 'POST',
+    headers: headers,
+    body: JSON.stringify({ userId, password }),
+  };
+
+  return fetch(`${urlBackend}/students/update/password`, options)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error('Erro ao atualizar senha');
+      }
+      return response.json();
+    })
+    .catch((error) => {
+      console.error('Erro na requisição:', error);
+      throw error;
+    });
+}
+
 export async function updatePointsStudent({ userId, points }) {
   const headers = new Headers();
   headers.append('Content-Type', 'application/json');
