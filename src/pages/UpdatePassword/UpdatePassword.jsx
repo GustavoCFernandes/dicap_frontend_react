@@ -36,7 +36,7 @@ const UpdatePassword = () => {
     setErrorValidate(false);
     setLoading(false);
 
-    await updatePasswordStudent(user.id, newPassword).then((res) => {
+    await updatePasswordStudent({ userId: user.id, password: newPassword }).then((res) => {
       console.log('Resposta do servidor:', res);
       Swal.fire({
         title: 'Senha atualizada!',

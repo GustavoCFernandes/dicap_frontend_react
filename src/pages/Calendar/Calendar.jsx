@@ -53,6 +53,7 @@ import {
   fetchAllUnavailableTimesByName,
 } from '../../utils/filterTeachersUnavailableTimes.ts';
 import { horariosIndidsponiveisJurandir } from './constants/horariosIndidsponiveisJurandir.js'
+import { isTimeConflict } from '../../utils/isTimeConflict.ts';
 
 const Calendar = () => {
   const teacherId = process.env.REACT_APP_ID_MICROSFOT_AZURE;
@@ -233,6 +234,17 @@ const Calendar = () => {
 
       if (isUnavailable) {
         ErrorAlert('Este horário não está disponível para agendamento.');
+        return;
+      }
+
+      const hasConflictWithAdditionalEvents = isTimeConflict(
+        newEvent.start,
+        newEvent.end,
+        additionalEvents
+      );
+
+      if (hasConflictWithAdditionalEvents) {
+        ErrorAlert('Este horário está indisponível para o professor Jurandir.');
         return;
       }
 
