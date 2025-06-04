@@ -39,14 +39,19 @@ export async function loginStudent({ email, password }) {
     });
 }
 
-export async function updatePasswordStudent({ userId, password }) {
+export async function updatePasswordStudent({ userId, newPassword }) {
+
+  if (!userId || !newPassword) {
+    throw new Error('userId e password são obrigatórios');
+  }
+
   const headers = new Headers();
   headers.append('Content-Type', 'application/json');
 
   const options = {
     method: 'POST',
     headers: headers,
-    body: JSON.stringify({ userId, password }),
+    body: JSON.stringify({ userId, newPassword }),
   };
 
   return fetch(`${urlBackend}/students/update/password`, options)
