@@ -2,15 +2,19 @@ import React, { useState } from 'react';
 import { loginStudent } from '../../services/students';
 import { useNavigate } from 'react-router-dom';
 import { useStore } from '../../stores/index';
+import { ModalSendRefreshPassword } from './components/ModalSendRefreshPassword.tsx';
+import { validateEmail } from '../../utils/validateEmail.ts';
 
 const Login = () => {
   const navigate = useNavigate();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false); // <- aqui!
+  const [showPassword, setShowPassword] = useState(false);
   const [errorLogin, setErrorLogin] = useState(false);
   const { setLoading, setUser } = useStore();
+
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -20,6 +24,12 @@ const Login = () => {
       email,
       password,
     };
+
+    if (!validateEmail(email)) {
+      setErrorLogin(true);
+      setLoading(false);
+      return;
+    }
 
     loginStudent(formData)
       .then((response) => {
@@ -110,7 +120,21 @@ const Login = () => {
             <strong>Entrar</strong>
           </button>
         </div>
+
+        <div style={{ marginTop: '1rem' }}>
+          <button
+            type='button'
+            style={{ background: 'none', border: 'none', color: '#007bff', cursor: 'pointer' }}
+            onClick={() => setShowForgotPassword(true)}
+          >
+            Esqueci minha senha
+          </button>
+        </div>
+
       </form>
+
+      {showForgotPassword && (<ModalSendRefreshPassword onClose={() => setShowForgotPassword(false)} />)}
+
     </div>
   );
 };
