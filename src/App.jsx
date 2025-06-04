@@ -42,6 +42,13 @@ const AppRoutes = () => {
           </ProtectedRoute>
         }
       />
+
+      <Route
+        path='/atualizar/senha/email'
+        element={
+            <UpdatePassword toEmail="true" />
+        }
+      />
     </Routes>
   );
 };
