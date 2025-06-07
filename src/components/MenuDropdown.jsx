@@ -26,9 +26,6 @@ const MenuDropdown = (props) => {
         </button>
         <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
           <li>
-            <a className="dropdown-item text-center" href="/agenda">Agenda</a>
-          </li>
-          <li>
             <a className="dropdown-item text-center" href="/atualizar/senha">Atualizar senha</a>
           </li>
           <li>

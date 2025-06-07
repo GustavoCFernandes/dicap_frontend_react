@@ -4,9 +4,9 @@ import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
 import { updatePasswordStudent } from '../../services/students'
 import { useLocation } from 'react-router-dom';
-import MenuDropdown from '../../components/MenuDropdown';
+import ButtonBack from '../../components/ButtonBack'
 
-const UpdatePassword = () => {
+const UpdatePassword = (props) => {
   const navigate = useNavigate();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
@@ -58,7 +58,7 @@ const UpdatePassword = () => {
 
   return (
     <div className='login-content'>
-      {token && <MenuDropdown />}
+      {!props.toEmail && <ButtonBack />}
       <form onSubmit={validatePasswords} className='login-form'>
         <div className='mb-5'>
           <h3>Atualizar senha</h3>
