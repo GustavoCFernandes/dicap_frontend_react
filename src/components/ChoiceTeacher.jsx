@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import BtnExit from '../components/BtnExit';
+import MenuDropdown from '../components/MenuDropdown';
 import { useStore } from '../stores/index';
 import { listTeachers } from '../services/teachers';
 import { useEffect, useState } from 'react';
@@ -44,7 +44,7 @@ const ChoiceTeacher = () => {
   return (
     <div>
       <div>
-        <BtnExit />
+        <MenuDropdown />
       </div>
       <div id='card-teacher-content'>
         {teachers

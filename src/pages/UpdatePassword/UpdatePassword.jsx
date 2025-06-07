@@ -3,9 +3,14 @@ import { useStore } from '../../stores/index';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
 import { updatePasswordStudent } from '../../services/students'
+import { useLocation } from 'react-router-dom';
+import MenuDropdown from '../../components/MenuDropdown';
 
 const UpdatePassword = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const token = queryParams.get('token');
 
   const [newPassword, setNewPassword] = useState('');
   const [password, setPassword] = useState('');
@@ -53,6 +58,7 @@ const UpdatePassword = () => {
 
   return (
     <div className='login-content'>
+      {token && <MenuDropdown />}
       <form onSubmit={validatePasswords} className='login-form'>
         <div className='mb-5'>
           <h3>Atualizar senha</h3>
