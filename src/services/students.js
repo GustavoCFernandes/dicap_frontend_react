@@ -67,6 +67,35 @@ export async function updatePasswordStudent({ userId, newPassword }) {
     });
 }
 
+export async function updatePasswordStudentWithToken({ newPassword, token }) {
+
+  if (!newPassword) {
+    throw new Error('Senha é obrigatória');
+  }
+
+  const headers = new Headers();
+  headers.append('Content-Type', 'application/json');
+  headers.append('authorization', `Bearer ${token}`);
+
+  const options = {
+    method: 'POST',
+    headers: headers,
+    body: JSON.stringify({ newPassword, token }),
+  };
+
+  return fetch(`${urlBackend}/students/update/password/token`, options)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error('Erro ao atualizar senha');
+      }
+      return response.json();
+    })
+    .catch((error) => {
+      console.error('Erro na requisição:', error);
+      throw error;
+    });
+}
+
 export async function updatePointsStudent({ userId, points }) {
   const headers = new Headers();
   headers.append('Content-Type', 'application/json');

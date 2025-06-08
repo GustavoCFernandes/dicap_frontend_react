@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useStore } from '../../stores/index';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
-import { updatePasswordStudent } from '../../services/students'
+import { updatePasswordStudent, updatePasswordStudentWithToken } from '../../services/students'
 import { useLocation } from 'react-router-dom';
 import ButtonBack from '../../components/ButtonBack'
 
@@ -14,7 +14,7 @@ const UpdatePassword = (props) => {
 
   const [newPassword, setNewPassword] = useState('');
   const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false); // <- aqui!
+  const [showPassword, setShowPassword] = useState(false);
   const [errorValidate, setErrorValidate] = useState(false);
   const { user, setLoading } = useStore();
 
@@ -41,8 +41,20 @@ const UpdatePassword = (props) => {
     setErrorValidate(false);
     setLoading(false);
 
+    if (token) {
+      await updatePasswordStudentWithToken({ newPassword, token }).then((res) => {
+        Swal.fire({
+          title: 'Senha atualizada!',
+          text: 'Senha atualizada com sucesso.',
+          icon: 'success',
+        }).then(() => {
+          navigate('/agenda');
+        });
+        return res;
+      });
+    }
+
     await updatePasswordStudent({ userId: user.id, newPassword }).then((res) => {
-      console.log('Resposta do servidor:', res);
       Swal.fire({
         title: 'Senha atualizada!',
         text: 'Senha atualizada com sucesso.',

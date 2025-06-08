@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { useStore } from '../../../stores/index';
 import Swal from 'sweetalert2'
 import { validateEmail } from '../../../utils/validateEmail.ts'
+import { sendEmailStudent } from '../../../services/email.js'
 
 export const ModalSendRefreshPassword = ({ onClose }) => {
-  const [resetEmail, setResetEmail] = useState('');
   const [email, setEmail] = useState('');
   const { setLoading } = useStore();
 
@@ -22,12 +22,13 @@ export const ModalSendRefreshPassword = ({ onClose }) => {
 
     try {
       setLoading(true);
-      // await forgotPassword({ email: resetEmail }); // Aqui você faz o envio real
-      Swal.fire({
-        title: 'E-mail enviado com sucesso!',
-        text: 'E-mail enviado com sucesso, verifique em sua caixa de entrada.',
-        icon: 'success',
-    })
+      await sendEmailStudent({ to: email }).then(() => {
+        Swal.fire({
+          title: 'E-mail enviado com sucesso!',
+          text: 'E-mail enviado com sucesso, verifique em sua caixa de entrada.',
+          icon: 'success',
+        })
+      })
     } catch (err) {
         Swal.fire({
             title: 'Erro ao enviar E-mail!',
@@ -73,7 +74,7 @@ export const ModalSendRefreshPassword = ({ onClose }) => {
             type="button"
             onClick={() => {
               onClose();
-              setResetEmail('');
+              setEmail('');
               setResetSent(false);
             }}
             style={{ marginLeft: '1rem' }}
