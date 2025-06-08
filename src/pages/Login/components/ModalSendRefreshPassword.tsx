@@ -22,27 +22,23 @@ export const ModalSendRefreshPassword = ({ onClose }) => {
 
     try {
       setLoading(true);
-      await sendEmailStudent({ to: email }).then(() => {
-        Swal.fire({
-          title: 'E-mail enviado com sucesso!',
-          text: 'E-mail enviado com sucesso, verifique em sua caixa de entrada.',
-          icon: 'success',
-        })
+      const _sendEmailStudent = await sendEmailStudent({ to: email })
+      console.log('_sendEmailStudent:', _sendEmailStudent)
+      Swal.fire({
+        title: 'E-mail enviado com sucesso!',
+        text: 'E-mail enviado com sucesso, verifique em sua caixa de entrada.',
+        icon: 'success',
       })
     } catch (err) {
         Swal.fire({
-            title: 'Erro ao enviar E-mail!',
-            text: 'Ocorreu um erro ao enviar o e-mail de redefinição. Por favor, tente novamente mais tarde.',
+            title: 'Erro, esse e-mail não existe!',
+            text: 'Ocorreu um erro ao enviar o e-mail de redefinição. Verifique se o e-mail foi digitado corretamente, se sim entre em contato com suporte.',
             icon: 'error',
         })
     } finally {
       setLoading(false);
     }
   };
-
-    function setResetSent (arg0: boolean) {
-        throw new Error('Function not implemented.')
-    }
 
   return (
     <div className="modal-overlay">
@@ -51,8 +47,11 @@ export const ModalSendRefreshPassword = ({ onClose }) => {
          <img width='200' src='/imgs/logo_positivo.svg' alt='Logo Dicap' />
         </div>
         <h4 className='text-black mt-4'>Redefinir senha</h4>
-        <div className='text-black px-5 py-2'>
-         <p className='text-black'>Informe seu e-mail para receber instruções de redefinição.</p>
+        <div className='text-black px-5 py-3'>
+         <small className='text-black'>
+          Digite seu e-mail abaixo e enviaremos um link para você redefinir sua senha. <br /> <br />
+          Lembre-se de verificar também sua caixa de spam ou lixo eletrônico, caso não encontre o e-mail na caixa de entrada.
+         </small>
         </div>
         <div>
             <input
@@ -75,7 +74,6 @@ export const ModalSendRefreshPassword = ({ onClose }) => {
             onClick={() => {
               onClose();
               setEmail('');
-              setResetSent(false);
             }}
             style={{ marginLeft: '1rem' }}
           >

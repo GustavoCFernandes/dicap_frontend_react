@@ -49,9 +49,17 @@ const UpdatePassword = (props) => {
           icon: 'success',
         }).then(() => {
           navigate('/agenda');
-        });
-        return res;
-      });
+        })
+      }).catch(() => {
+        Swal.fire({
+          title: 'Tempo expirado.',
+          text: 'Esse link não é mais valido, tente enviar outro link de redefinição de senha em seu e-mail.',
+          icon: 'error',
+        }).then(() => {
+          navigate('/agenda');
+        })
+      })
+      return
     }
 
     await updatePasswordStudent({ userId: user.id, newPassword }).then((res) => {
@@ -63,7 +71,15 @@ const UpdatePassword = (props) => {
         navigate('/agenda');
       });
       return res;
-    });
+    }).catch(() => {
+      Swal.fire({
+        title: 'Tempo expirado.',
+        text: 'Esse link não é mais valido, tente enviar outro link de redefinição de senha em seu e-mail.',
+        icon: 'error',
+      }).then(() => {
+        navigate('/agenda');
+      })
+    })
 
     return true;
   };
