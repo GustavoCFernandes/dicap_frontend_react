@@ -1142,5 +1142,135 @@ export const horariosIndidsponiveisJurandir = [
       start: '2025-07-05T21:00:00',
       end: '2025-07-05T23:59:00',
       color: 'red'
-    }
+    },
+     // DOMINGO - 08/06/2025
+  {
+    title: 'Indisponível',
+    start: '2025-06-08T00:01:00',
+    end: '2025-06-08T23:59:00',
+    color: 'red'
+  },
+  // DOMINGO - 15/06/2025
+  {
+    title: 'Indisponível',
+    start: '2025-06-15T00:01:00',
+    end: '2025-06-15T23:59:00',
+    color: 'red'
+  },
+  // DOMINGO - 22/06/2025
+  {
+    title: 'Indisponível',
+    start: '2025-06-22T00:01:00',
+    end: '2025-06-22T23:59:00',
+    color: 'red'
+  },
+  // DOMINGO - 29/06/2025
+  {
+    title: 'Indisponível',
+    start: '2025-06-29T00:01:00',
+    end: '2025-06-29T23:59:00',
+    color: 'red'
+  },
+  // DOMINGO - 06/07/2025
+  {
+    title: 'Indisponível',
+    start: '2025-07-06T00:01:00',
+    end: '2025-07-06T23:59:00',
+    color: 'red'
+  },
+  // 11/06/25 - das 16:00 às 17:00
+  {
+    title: 'Indisponível',
+    start: '2025-06-11T16:00:00',
+    end: '2025-06-11T17:00:00',
+    color: 'red'
+  },
+
+  // 14/06/25 - das 08:00 às 09:00
+  {
+    title: 'Indisponível',
+    start: '2025-06-14T08:00:00',
+    end: '2025-06-14T09:00:00',
+    color: 'red'
+  },
+
+  // 26/06/25 - das 10:30 às 11:00
+  {
+    title: 'Indisponível',
+    start: '2025-06-26T10:30:00',
+    end: '2025-06-26T11:00:00',
+    color: 'red'
+  },
+
+  // 24/06/25 - das 10:30 às 11:00
+  {
+    title: 'Indisponível',
+    start: '2025-06-24T10:30:00',
+    end: '2025-06-24T11:00:00',
+    color: 'red'
+  },
+
+  // 19/06/25 - das 10:30 às 11:00
+  {
+    title: 'Indisponível',
+    start: '2025-06-19T10:30:00',
+    end: '2025-06-19T11:00:00',
+    color: 'red'
+  },
+
+  // 17/06/25 - das 10:30 às 11:00
+  {
+    title: 'Indisponível',
+    start: '2025-06-17T10:30:00',
+    end: '2025-06-17T11:00:00',
+    color: 'red'
+  },
+
+  // 12/06/25 - das 10:30 às 11:00
+  {
+    title: 'Indisponível',
+    start: '2025-06-12T10:30:00',
+    end: '2025-06-12T11:00:00',
+    color: 'red'
+  },
+
+  // 13/06/25 - das 08:30 às 09:00
+  {
+    title: 'Indisponível',
+    start: '2025-06-13T08:30:00',
+    end: '2025-06-13T09:00:00',
+    color: 'red'
+  },
+
+  // 12/06/25 - das 14:30 às 15:30
+  {
+    title: 'Indisponível',
+    start: '2025-06-12T14:30:00',
+    end: '2025-06-12T15:30:00',
+    color: 'red'
+  },
+
+  // 13/06/25 - das 11:30 às 12:00
+  {
+    title: 'Indisponível',
+    start: '2025-06-13T11:30:00',
+    end: '2025-06-13T12:00:00',
+    color: 'red'
+  },
+
+  // 17/06/25 - das 15:30 às 16:00
+  {
+    title: 'Indisponível',
+    start: '2025-06-17T15:30:00',
+    end: '2025-06-17T16:00:00',
+    color: 'red'
+  },
+
+  // 19/06/25 - das 15:30 às 16:00
+  {
+    title: 'Indisponível',
+    start: '2025-06-19T15:30:00',
+    end: '2025-06-19T16:00:00',
+    color: 'red'
+  }
   ];
