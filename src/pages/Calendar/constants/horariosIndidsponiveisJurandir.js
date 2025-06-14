@@ -1398,5 +1398,143 @@ export const horariosIndidsponiveisJurandir = [
     start: '2025-06-13T17:00:00',
     end: '2025-06-13T18:00:00',
     color: 'red'
+  },
+  
+  // SEGUNDA-FEIRA - 16/06/2025
+  {
+    title: 'Indisponível',
+    start: '2025-06-16T06:00:00', // 06:00
+    end: '2025-06-16T07:00:00',   // 07:00
+    color: 'red'
+  },
+  {
+    title: 'Indisponível',
+    start: '2025-06-16T08:30:00', // 08:30
+    end: '2025-06-16T10:00:00',   // 10:00
+    color: 'red'
+  },
+  {
+    title: 'Indisponível',
+    start: '2025-06-16T13:00:00', // 13:00
+    end: '2025-06-16T14:30:00',   // 14:30
+    color: 'red'
+  },
+
+  // TERÇA-FEIRA - 17/06/2025
+  {
+    title: 'Indisponível',
+    start: '2025-06-17T06:30:00', // 06:30
+    end: '2025-06-17T07:00:00',   // 07:00
+    color: 'red'
+  },
+  {
+    title: 'Indisponível',
+    start: '2025-06-17T08:30:00', // 08:30
+    end: '2025-06-17T10:00:00',   // 10:00
+    color: 'red'
+  },
+  {
+    title: 'Indisponível',
+    start: '2025-06-17T10:30:00', // 10:30
+    end: '2025-06-17T15:00:00',   // 15:00
+    color: 'red'
+  },
+
+  // QUARTA-FEIRA - 18/06/2025
+  {
+    title: 'Indisponível',
+    start: '2025-06-18T06:00:00', // 06:00
+    end: '2025-06-18T07:00:00',   // 07:00
+    color: 'red'
+  },
+  {
+    title: 'Indisponível',
+    start: '2025-06-18T08:30:00', // 08:30
+    end: '2025-06-18T09:30:00',   // 09:30
+    color: 'red'
+  },
+  {
+    title: 'Indisponível',
+    start: '2025-06-18T12:30:00', // 12:30
+    end: '2025-06-18T14:30:00',   // 14:30
+    color: 'red'
+  },
+  {
+    title: 'Indisponível',
+    start: '2025-06-18T17:00:00', // 17:00
+    end: '2025-06-18T18:00:00',   // 18:00
+    color: 'red'
+  },
+
+  // QUINTA-FEIRA - 19/06/2025
+  {
+    title: 'Indisponível',
+    start: '2025-06-19T07:00:00', // 07:00
+    end: '2025-06-19T08:00:00',   // 08:00
+    color: 'red'
+  },
+  {
+    title: 'Indisponível',
+    start: '2025-06-19T08:30:00', // 08:30
+    end: '2025-06-19T10:00:00',   // 10:00
+    color: 'red'
+  },
+  {
+    title: 'Indisponível',
+    start: '2025-06-19T10:30:00', // 10:30
+    end: '2025-06-19T11:30:00',   // 11:30
+    color: 'red'
+  },
+  {
+    title: 'Indisponível',
+    start: '2025-06-19T12:30:00', // 12:30
+    end: '2025-06-19T15:00:00',   // 15:00
+    color: 'red'
+  },
+  {
+    title: 'Indisponível',
+    start: '2025-06-19T17:00:00', // 17:00
+    end: '2025-06-19T18:00:00',   // 18:00
+    color: 'red'
+  },
+
+  // SEXTA-FEIRA - 20/06/2025
+  {
+    title: 'Indisponível',
+    start: '2025-06-20T06:00:00', // 06:00
+    end: '2025-06-20T08:30:00',   // 08:30
+    color: 'red'
+  },
+  {
+    title: 'Indisponível',
+    start: '2025-06-20T10:00:00', // 10:00
+    end: '2025-06-20T11:00:00',   // 11:00
+    color: 'red'
+  },
+  {
+    title: 'Indisponível',
+    start: '2025-06-20T12:30:00', // 12:30
+    end: '2025-06-20T15:30:00',   // 15:30
+    color: 'red'
+  },
+  {
+    title: 'Indisponível',
+    start: '2025-06-20T17:00:00', // 17:00
+    end: '2025-06-20T17:30:00',   // 17:30
+    color: 'red'
+  },
+
+  // SÁBADO - 21/06/2025
+  {
+    title: 'Indisponível',
+    start: '2025-06-21T06:00:00', // 06:00
+    end: '2025-06-21T07:00:00',   // 07:00
+    color: 'red'
+  },
+  {
+    title: 'Indisponível',
+    start: '2025-06-21T08:00:00', // 08:00
+    end: '2025-06-21T09:00:00',   // 09:00
+    color: 'red'
   }
 ];
