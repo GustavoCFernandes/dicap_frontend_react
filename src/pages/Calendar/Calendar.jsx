@@ -1,5 +1,5 @@
 // React e bibliotecas de terceiros
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { DateTime } from 'luxon';
 import Swal from 'sweetalert2';
 
@@ -28,6 +28,7 @@ import {
   graphDeleteEvent,
 } from '../../services/graph';
 import { addEventCalendar } from '../../services/eventsCalendar.js';
+import { listUnavailabilityTeachersService, createUnavailabilityTeachersService } from '../../services/teachers.js';
 import {
   updatePointsStudent,
   updateNumberAppointmentsStudent,
@@ -52,7 +53,6 @@ import {
   fetchAllUnavailableTimes,
   fetchAllUnavailableTimesByName,
 } from '../../utils/filterTeachersUnavailableTimes.ts';
-import { horariosIndidsponiveisJurandir } from './constants/horariosIndidsponiveisJurandir.js'
 import { isTimeConflict } from '../../utils/isTimeConflict.ts';
 
 const Calendar = () => {
@@ -67,6 +67,7 @@ const Calendar = () => {
   const [tempEnd, setTempEnd] = useState('');
   const [actionType, setActionType] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [horariosIndisponiveisJurandir, setHorariosIndisponiveisJurandir] = useState([])
 
   const [events, setEvents] = useState([]);
   const [showCalendar, setShowCalendar] = useState(false);
@@ -76,7 +77,17 @@ const Calendar = () => {
     start: '',
     end: '',
   });
-  let additionalEvents = [...horariosIndidsponiveisJurandir];
+
+  useEffect(() => {
+    async function fetchListUnavailabilityTeachersService() {
+      const { data } = await listUnavailabilityTeachersService()
+      setHorariosIndisponiveisJurandir(data)
+    }
+
+    fetchListUnavailabilityTeachersService()
+  }, [])
+
+  let additionalEvents = [...horariosIndisponiveisJurandir];
 
   if (indisponibilidadeJurandir !== 'true') {
     additionalEvents = []
@@ -213,6 +224,20 @@ const Calendar = () => {
         ErrorAlert('Este horário já está ocupado.');
         return;
       }
+
+      // Evento padrão aceito pelo FullCalendar
+      const eventDefault = {
+        title: 'Indiponíveil',
+        start: newStart.toISO(),
+        end: newEnd.toISO(),
+        color: 'red',
+      };
+
+      const createUnavailabilityTeachers = await createUnavailabilityTeachersService({
+        ...eventDefault,
+        typeEvent: 'unavailability'
+      })
+      //console.log('createUnavailabilityTeachers:', createUnavailabilityTeachers)
 
       //testando
       //if (true) return;
