@@ -613,7 +613,27 @@ const Calendar = () => {
 
       <div>
         {showCalendar ? (
-          <FullCalendar
+          <div>
+          <div className="calendar-header d-flex justify-content-between align-items-center mb-3">
+            <h2>Agenda</h2>
+            <button
+              className="btn btn-first"
+              onClick={() => {
+                const now = DateTime.local().set({ second: 0, millisecond: 0 });
+                const start = now.toFormat("yyyy-MM-dd'T'HH:mm");
+                const end = now.plus({ minutes: 30 }).toFormat("yyyy-MM-dd'T'HH:mm");
+
+                setNewEvent({ subject: '', start, end });
+                setActionType('create');
+                setShowModal(true);
+              }}
+            >
+              + Novo Evento
+            </button>
+          </div>
+
+
+            <FullCalendar
             plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
             initialView='timeGridWeek'
             events={[
@@ -682,6 +702,7 @@ const Calendar = () => {
               });
             }}
           />
+          </div>
         ) : (
           <Loader />
         )}
