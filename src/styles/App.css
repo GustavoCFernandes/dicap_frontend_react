@@ -93,6 +93,11 @@
   width: 50%;
 }
 
+.login-content-teachers {
+  background-color: var(--hover-2);
+}
+
+.login-content-teachers,
 .login-content {
     height: 100vh;
     display: flex;

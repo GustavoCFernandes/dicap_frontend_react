@@ -6,6 +6,7 @@ import UpdatePassword from './pages/UpdatePassword/UpdatePassword';
 import ChoiceTeacher from './components/ChoiceTeacher';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from './pages/Login/Login';
+import LoginTeachers from './pages/LoginTeachers/LoginTeachers';
 import ProfileContent from './components/ProfileContent/ProfileContent';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import Loader from './components/Loader';
@@ -16,6 +17,7 @@ const AppRoutes = () => {
   return (
     <Routes>
       <Route path='/' element={<Login />} />
+      <Route path='/professor' element={<LoginTeachers />} />
       <Route path='*' element={<NotFound />} />
       <Route
         path='/escolha/professor'
