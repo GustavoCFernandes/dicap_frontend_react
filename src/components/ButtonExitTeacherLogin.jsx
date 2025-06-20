@@ -1,13 +1,13 @@
 import { useNavigate } from 'react-router-dom';
 
-const ButtonExit = (props) => {
+const ButtonExitTeacherLogin = (props) => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
+    localStorage.removeItem('token-teacher-login');
     localStorage.removeItem('accessToken');
     localStorage.removeItem('app-store');
-    navigate('/');
+    navigate('/login/professor');
   };
 
   return (
@@ -22,4 +22,4 @@ const ButtonExit = (props) => {
   );
 };
 
-export default ButtonExit;
+export default ButtonExitTeacherLogin;

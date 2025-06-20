@@ -237,7 +237,7 @@ const Calendar = () => {
         ...eventDefault,
         typeEvent: 'unavailability'
       })
-      //console.log('createUnavailabilityTeachers:', createUnavailabilityTeachers)
+      console.log('createUnavailabilityTeachers:', createUnavailabilityTeachers)
 
       //testando
       //if (true) return;

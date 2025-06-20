@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { loginStudent } from '../../services/students.js';
+import { useMutation } from '@tanstack/react-query';
+import { loginTeacher } from '../../services/teachers';
 import { useNavigate } from 'react-router-dom';
-import { useStore } from '../../stores/index';
-import { validateEmail } from '../../utils/validateEmail.ts';
+import { useStore } from '../../stores';
+//import { validateEmail } from '../../utils/validateEmail';
 
 const LoginTeachers = () => {
   const navigate = useNavigate();
@@ -10,47 +11,39 @@ const LoginTeachers = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [errorLogin, setErrorLogin] = useState(false);
-  const { setLoading, setUser } = useStore();
+  const [emailError, setEmailError] = useState(false);
+  const { setTeacherLoginPrivate } = useStore();
 
-  const handleLogin = async (e) => {
+  const loginMutation = useMutation({
+    mutationFn: loginTeacher,
+    onSuccess: (response) => {
+      if (response?.user) {
+        localStorage.setItem('token-teacher-login', response.token);
+        setTeacherLoginPrivate(response?.user)
+      }
+
+      if (response?.auth) {
+        navigate('/agenda/professor/privado');
+      }
+    },
+  });
+
+  const handleSubmit = (e) => {
     e.preventDefault();
-    setLoading(true);
 
-    const formData = {
-      email,
-      password,
-    };
+    setEmailError(false);
 
-    if (!validateEmail(email)) {
-      setErrorLogin(true);
-      setLoading(false);
-      return;
-    }
+    //if (!validateEmail(email)) {
+    //  setEmailError(true);
+    //  return;
+    //}
 
-    loginStudent(formData)
-      .then((response) => {
-        if (response.user) {
-          setUser(response.user);
-          localStorage.setItem('token', response.token);
-        }
-
-        if (response.auth) {
-          navigate('/agenda');
-        }
-      })
-      .catch((error) => {
-        console.error('Login failed:', error);
-        setErrorLogin(true);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+    loginMutation.mutate({ email, password });
   };
 
   return (
     <div className='login-content-teachers'>
-      <form onSubmit={handleLogin} className='login-form'>
+      <form onSubmit={handleSubmit} className='login-form'>
         <div className='mb-5'>
           <img width='200' src='/imgs/logo_positivo.svg' alt='Logo Dicap' />
           <h3>Login do Professor</h3>
@@ -59,65 +52,56 @@ const LoginTeachers = () => {
         <div>
           <input
             type='text'
-            id='email'
-            required
             placeholder='E-mail de usuário'
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            required
           />
         </div>
 
         <div style={{ position: 'relative' }}>
           <input
             type={showPassword ? 'text' : 'password'}
-            id='password'
-            required
             placeholder='Senha'
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            required
           />
           <button
             type='button'
             onClick={() => setShowPassword((prev) => !prev)}
             style={{
               position: 'absolute',
-              border: '1px solid #ccc',
-              background: 'none',
               right: '0',
               top: '0',
               width: '40px',
               height: '100%',
+              background: 'none',
+              border: '1px solid #ccc',
               cursor: 'pointer',
             }}
           >
-            {showPassword ? (
-              <img
-                src='/imgs/icons/password/hide.png'
-                className='card-img-top'
-                alt='Icone'
-              ></img>
-            ) : (
-              <img
-                src='/imgs/icons/password/show.png'
-                className='card-img-top'
-                alt='Icone'
-              ></img>
-            )}
+            <img
+              src={`/imgs/icons/password/${showPassword ? 'hide' : 'show'}.png`}
+              className='card-img-top'
+              alt='Icone'
+            />
           </button>
         </div>
 
-        {errorLogin && (
-          <div>
-            <p className='text-danger'>Login e senha inválidos.</p>
-          </div>
+        {emailError && (
+          <p className='text-danger'>Digite um e-mail válido.</p>
+        )}
+
+        {loginMutation.isError && (
+          <p className='text-danger'>Login e senha inválidos.</p>
         )}
 
         <div className='btn-login'>
-          <button type='submit'>
-            <strong>Entrar</strong>
+          <button type='submit' disabled={loginMutation.isPending}>
+            <strong>{loginMutation.isPending ? 'Entrando...' : 'Entrar'}</strong>
           </button>
         </div>
-
       </form>
     </div>
   );

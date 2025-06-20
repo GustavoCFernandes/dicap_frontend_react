@@ -5,6 +5,7 @@ export const useStore = create(
   persist(
     (set) => ({
       user: null,
+      teacherLoginPrivate: null,
       isLoading: false,
       teacherId: null,
       teacherName: null,
@@ -15,6 +16,7 @@ export const useStore = create(
         set({ teacherUnavailableTimes: unavailableTimes }),
       setLoading: (loadingValue) => set({ isLoading: loadingValue }),
       setUser: (user) => set({ user }),
+      setTeacherLoginPrivate: (teacherLoginPrivate) => set({ teacherLoginPrivate }),
       logout: () => set({ user: null, teacherId: null }),
     }),
     {

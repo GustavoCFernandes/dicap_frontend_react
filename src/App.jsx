@@ -12,13 +12,16 @@ import { ProtectedRoute } from './components/ProtectedRoute';
 import Loader from './components/Loader';
 import { useStore } from './stores/index';
 import NotFound from './pages/NotFound';
+import CalendarTeacher from './pages/CalendarTeacher/CalendarTeacher.tsx';
 
 const AppRoutes = () => {
   return (
     <Routes>
       <Route path='/' element={<Login />} />
-      <Route path='/professor' element={<LoginTeachers />} />
+      <Route path='/login/professor' element={<LoginTeachers />} />
+      <Route path='/agenda/professor/privado' element={<CalendarTeacher />} />
       <Route path='*' element={<NotFound />} />
+
       <Route
         path='/escolha/professor'
         element={
