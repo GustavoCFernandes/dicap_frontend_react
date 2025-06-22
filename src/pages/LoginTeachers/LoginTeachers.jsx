@@ -54,7 +54,7 @@ const LoginTeachers = () => {
             type='text'
             placeholder='E-mail de usuário'
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => setEmail(e.target.value.trim())}
             required
           />
         </div>
@@ -64,7 +64,7 @@ const LoginTeachers = () => {
             type={showPassword ? 'text' : 'password'}
             placeholder='Senha'
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => setPassword(e.target.value.trim())}
             required
           />
           <button
