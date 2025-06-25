@@ -25,6 +25,7 @@ export const useStore = create(
         user: state.user,
         teacherId: state.teacherId,
         teacherName: state.teacherName,
+        teacherLoginPrivate: state.teacherLoginPrivate,
       }),
     }
   )

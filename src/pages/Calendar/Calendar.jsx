@@ -218,7 +218,7 @@ const Calendar = () => {
         return;
       }
 
-      //console.log('Professor escolhido:', chosenTeacher);
+      console.log('Professor escolhido:', chosenTeacher);
 
       if (isConflictWithBusySchedule) {
         ErrorAlert('Este horário já está ocupado.');
@@ -332,7 +332,8 @@ const Calendar = () => {
       const messageNewEvent = messageCreateNewEvent(
         newStart,
         newEnd,
-        fullNameEvent
+        fullNameEvent,
+        chosenTeacher
       );
 
       //Extraindo data formato dd/mm/aaaa

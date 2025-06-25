@@ -21,7 +21,7 @@ export default function CalendarTeacher() {
         // Filtra apenas os eventos do responsável
         const filtered = allEvents.filter(
           (item) =>
-            item.responsible === 'Jurandir Ferreira' &&
+            item.responsible === teacherLoginPrivate?.name &&
             item.type === 'create' &&
             item.event !== 'Test/Dicap Dev (SA)'
         );
@@ -88,7 +88,6 @@ export default function CalendarTeacher() {
             placement: 'top',
           });
         }}
-        dateClick={(info) => alert(`Você clicou em: ${info.dateStr}`)}
       />
     </div>
   );

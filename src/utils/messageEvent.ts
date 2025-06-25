@@ -22,12 +22,12 @@ export function extractEventDateTime(newStart) {
   )
 }
 
-export function messageCreateNewEvent(newStart, newEnd, fullNameEvent) {
+export function messageCreateNewEvent(newStart, newEnd, fullNameEvent, teacher) {
   return `${fullNameEvent} agendou uma nova aula no dia ${newStart.toFormat(
     'dd/LL/yy'
   )} das ${newStart.toLocaleString(
     DateTime.TIME_SIMPLE
-  )} às ${newEnd.toLocaleString(DateTime.TIME_SIMPLE)}.`;
+  )} às ${newEnd.toLocaleString(DateTime.TIME_SIMPLE)} com ${teacher}.`;
 }
 
 export function messageDeleteEvent(event) {
