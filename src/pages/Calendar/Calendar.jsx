@@ -360,11 +360,11 @@ const Calendar = () => {
         } catch (err) {
           console.warn('Erro ao enviar mensagem (ignorado):', err);
         }
-        try {
-          await sendDataGoogleSheets(messageNewEvent);
-        } catch (err) {
-          console.warn('Erro ao enviar para o Google Sheets (ignorado):', err);
-        }
+        //try {
+        //  await sendDataGoogleSheets(messageNewEvent);
+        //} catch (err) {
+        //  console.warn('Erro ao enviar para o Google Sheets (ignorado):', err);
+        //}
       }
 
       const newPoints = user.points - pointsToDeduct;
