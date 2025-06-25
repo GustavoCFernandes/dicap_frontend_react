@@ -480,6 +480,28 @@ const Calendar = () => {
     }
   };
 
+  const [validRange, setValidRange] = useState(getValidRange());
+
+  // Função que calcula o intervalo dinâmico
+  function getValidRange() {
+    const today = new Date();
+    const endDate = new Date();
+    endDate.setMonth(endDate.getMonth() + 1);
+
+    return {
+      end: endDate.toISOString().split('T')[0], // Só limita o futuro
+    };
+  }
+
+  // Atualiza o validRange todo dia
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setValidRange(getValidRange());
+    }, 60 * 60 * 1000); // Atualiza a cada 1 hora (você pode mudar para 24 horas)
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <div id='calendar-content'>
       <HeaderCalendar />
@@ -615,94 +637,95 @@ const Calendar = () => {
       <div>
         {showCalendar ? (
           <div>
-          <div className="calendar-header d-flex justify-content-between align-items-center mb-3">
-            <h2>Agenda</h2>
-            <button
-              className="btn btn-first"
-              onClick={() => {
-                const now = DateTime.local().set({ second: 0, millisecond: 0 });
-                const start = now.toFormat("yyyy-MM-dd'T'HH:mm");
-                const end = now.plus({ minutes: 30 }).toFormat("yyyy-MM-dd'T'HH:mm");
+            <div className="calendar-header d-flex justify-content-between align-items-center mb-3">
+              <h2>Agenda</h2>
+              <button
+                className="btn btn-first"
+                onClick={() => {
+                  const now = DateTime.local().set({ second: 0, millisecond: 0 });
+                  const start = now.toFormat("yyyy-MM-dd'T'HH:mm");
+                  const end = now.plus({ minutes: 30 }).toFormat("yyyy-MM-dd'T'HH:mm");
 
-                setNewEvent({ subject: '', start, end });
-                setActionType('create');
-                setShowModal(true);
-              }}
-            >
-              + Novo Evento
-            </button>
+                  setNewEvent({ subject: '', start, end });
+                  setActionType('create');
+                  setShowModal(true);
+                }}
+              >
+                + Novo Evento
+              </button>
           </div>
 
 
             <FullCalendar
-            plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-            initialView='timeGridWeek'
-            events={[
-              ...events,
-              ...additionalEvents
-            ]}
-            locales={allLocales}
-            locale='pt-br'
-            timeZone='America/Sao_Paulo'
-            headerToolbar={{
-              left: 'prev,next today',
-              center: 'title',
-              right: 'timeGridWeek,timeGridDay',
-            }}
-            slotLabelFormat={{
-              hour: '2-digit',
-              minute: '2-digit',
-              hour12: false,
-            }}
-            // Desabilita a seleção de datas passadas
-            //validRange={{
-            //  start: DateTime.now().toISODate(),
-            //}}
-            eventDidMount={showEventTooltip}
-            nowIndicator={true}
-            height='auto'
-            dateClick={(info) => {
-              const start = DateTime.fromISO(info.dateStr)
-                .set({ hour: 7, minute: 0 })
-                .toFormat("yyyy-MM-dd'T'HH:mm");
+              validRange={validRange}
+              plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+              initialView='timeGridWeek'
+              events={[
+                ...events,
+                ...additionalEvents
+              ]}
+              locales={allLocales}
+              locale='pt-br'
+              timeZone='America/Sao_Paulo'
+              headerToolbar={{
+                left: 'prev,next today',
+                center: 'title',
+                right: 'timeGridWeek,timeGridDay',
+              }}
+              slotLabelFormat={{
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: false,
+              }}
+              // Desabilita a seleção de datas passadas
+              //validRange={{
+              //  start: DateTime.now().toISODate(),
+              //}}
+              eventDidMount={showEventTooltip}
+              nowIndicator={true}
+              height='auto'
+              dateClick={(info) => {
+                const start = DateTime.fromISO(info.dateStr)
+                  .set({ hour: 7, minute: 0 })
+                  .toFormat("yyyy-MM-dd'T'HH:mm");
 
-              const end = DateTime.fromISO(info.dateStr)
-                .set({ hour: 8, minute: 0 })
-                .toFormat("yyyy-MM-dd'T'HH:mm");
+                const end = DateTime.fromISO(info.dateStr)
+                  .set({ hour: 8, minute: 0 })
+                  .toFormat("yyyy-MM-dd'T'HH:mm");
 
-              setTempStart(start);
-              setTempEnd(end);
-              setShowChoiceModal(true);
-            }}
-            eventClick={async (info) => {
-              // Verifica se o evento é do usuário
-              if (info.event.title === 'Indisponível') {
-                await ErrorAlert('Esse horário não está disponível.');
-                setShowChoiceModal(false);
-                return;
-              }
-
-              if (info.event.title !== fullNameEvent) {
-                ErrorAlert('Você só pode excluir seus próprios eventos.');
-                setShowChoiceModal(false);
-                return;
-              }
-
-              Swal.fire({
-                title: `Deseja excluir o compromisso desta data?`,
-                text: 'Esta ação vai excluir o evento selecionado.',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Sim, excluir evento desta data',
-              }).then((result) => {
-                if (result.isConfirmed) {
-                  handleDeleteEvent(info.event.id);
+                setTempStart(start);
+                setTempEnd(end);
+                setShowChoiceModal(true);
+              }}
+              eventClick={async (info) => {
+                // Verifica se o evento é do usuário
+                if (info.event.title === 'Indisponível') {
+                  await ErrorAlert('Esse horário não está disponível.');
+                  setShowChoiceModal(false);
+                  return;
                 }
-              });
-            }}
-          />
+
+                if (info.event.title !== fullNameEvent) {
+                  ErrorAlert('Você só pode excluir seus próprios eventos.');
+                  setShowChoiceModal(false);
+                  return;
+                }
+
+                Swal.fire({
+                  title: `Deseja excluir o compromisso desta data?`,
+                  text: 'Esta ação vai excluir o evento selecionado.',
+                  icon: 'warning',
+                  showCancelButton: true,
+                  confirmButtonColor: '#3085d6',
+                  cancelButtonColor: '#d33',
+                  confirmButtonText: 'Sim, excluir evento desta data',
+                }).then((result) => {
+                  if (result.isConfirmed) {
+                    handleDeleteEvent(info.event.id);
+                  }
+                });
+              }}
+            />
           </div>
         ) : (
           <Loader />
