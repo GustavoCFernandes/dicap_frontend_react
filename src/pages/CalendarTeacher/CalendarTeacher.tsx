@@ -22,11 +22,27 @@ export default function CalendarTeacher() {
         const filtered = allEvents.filter(
           (item) =>
             item.responsible === teacherLoginPrivate?.name &&
-            item.type === 'create' &&
-            item.event !== 'Test/Dicap Dev (SA)'
+            item.type === 'create'
+            //&& item.event !== 'Test/Dicap Dev (SA)'
         );
 
-        const formatted = filtered.map((item) => {
+        // Lista os eventos do tipo 'delete'
+          const deleteEvents = allEvents.filter(
+            (item) => item.type === 'delete'
+          );
+
+          // Função que cria uma chave única para comparação
+          const generateKey = (item) => `${item.event}_${item.date}_${item.start}_${item.end}`;
+
+          // Cria um Set com as chaves dos eventos deletados
+          const deleteKeys = new Set(deleteEvents.map(generateKey));
+
+          // Filtra os eventos 'create' que não estão na lista de deletados
+          const finalFiltered = filtered.filter(
+            (item) => !deleteKeys.has(generateKey(item))
+          );
+
+        const formatted = finalFiltered.map((item) => {
           const [day, month, year] = item.date.split('/').map(Number);
 
           // Função para converter hora no formato 12h com AM/PM para [hour, minute]
