@@ -1,28 +1,15 @@
-import Swal, { SweetAlertResult } from 'sweetalert2';
+import Swal from 'sweetalert2';
 
-export function showLoadAlert(text, time): void {
-  let timerInterval: number;
-
+export function showLoadAlert(text: string): void {
   Swal.fire({
     title: text,
-    timer: time,
-    timerProgressBar: true,
+    allowOutsideClick: false,
     didOpen: () => {
       Swal.showLoading();
-      const popup = Swal.getPopup();
-      const timerEl = popup?.querySelector('b');
-      timerInterval = window.setInterval(() => {
-        if (timerEl) {
-          timerEl.textContent = `${Swal.getTimerLeft()}`;
-        }
-      }, 100);
-    },
-    willClose: () => {
-      clearInterval(timerInterval);
-    },
-  }).then((result: SweetAlertResult) => {
-    if (result.dismiss === Swal.DismissReason.timer) {
-      console.log('I was closed by the timer');
     }
   });
+}
+
+export function hideLoadAlert(): void {
+  Swal.close();
 }

@@ -39,7 +39,7 @@ import { sendDataGoogleSheets } from '../../services/googleSheets.ts';
 // Utils
 import { modalOverlayStyle, modalStyle } from './styles.ts';
 import { showEventTooltip } from '../../utils/showEventTooltip.ts';
-import { showLoadAlert } from '../../utils/showLoadAlert.ts';
+import { showLoadAlert, hideLoadAlert } from '../../utils/showLoadAlert.ts';
 import { FilterEventsCalendar } from '../../utils/filterEventsCalendar.ts';
 import { chooseAvailableTeacher } from '../../utils/pickTeacherByPreference.ts';
 import {
@@ -160,7 +160,7 @@ const Calendar = () => {
 
   const handleCreateEvent = async () => {
     setIsSubmitting(true);
-    showLoadAlert('Criando agendamento, aguarde por favor!', 10000);
+    showLoadAlert('Criando agendamento, aguarde por favor!');
     try {
       const now = DateTime.local().plus({ hours: 2 });
       const newStart = DateTime.fromISO(newEvent.start);
@@ -385,16 +385,18 @@ const Calendar = () => {
       setShowModal(false);
       setNewEvent({ subject: '', start: '', end: '' });
       fetchEvents();
+      hideLoadAlert();
     } catch (err) {
       ErrorAlert('Erro ao criar evento.');
       console.error(err);
+      hideLoadAlert();
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const handleDeleteEvent = async (eventCalendarId) => {
-    showLoadAlert('Deletando agendamento, aguarde por favor!', 30000);
+    showLoadAlert('Deletando agendamento, aguarde por favor!');
     try {
       //const threeHours = 300;
       const thoHours = 180;
