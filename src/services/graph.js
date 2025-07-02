@@ -26,7 +26,7 @@ function getParamsGraphCalendar() {
   const startDateTime = toISOStringNoMs(startOfWeek);
   const endDateTime = toISOStringNoMs(endDate);
 
-  return `?startDateTime=${startDateTime}&endDateTime=${endDateTime}&$filter=isCancelled eq false&$top=500`;
+  return `?startDateTime=${startDateTime}&endDateTime=${endDateTime}&$filter=isCancelled eq false&$top=500&$expand=singleValueExtendedProperties($filter=(id eq 'String {01234567-89ab-cdef-0123-456789abcdef} Name ProfessorEscolhido'))`;
 }
 
 export async function generetedAccessTokenGraphToBakend() {
@@ -90,6 +90,7 @@ export async function graphCalendar(teacherId) {
 }
 
 export async function graphCreateEvent(eventCalendar, teacherId) {
+  console.log('eventCalendar:', eventCalendar)
   const accessToken = getToken();
 
   const response = await fetch(

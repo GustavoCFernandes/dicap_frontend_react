@@ -102,6 +102,7 @@ const Calendar = () => {
   const fetchEvents = React.useCallback(async () => {
     try {
       const events = await graphCalendar(teacherId);
+      console.log('events:', events)
 
       const normalize = (str) => str?.trim().toLowerCase();
 
@@ -327,6 +328,12 @@ const Calendar = () => {
         },
         isOnlineMeeting: true,
         onlineMeetingProvider: 'teamsForBusiness',
+        singleValueExtendedProperties: [
+            {
+              id:"String 01234567-89ab-cdef-0123-456789abcdef Name ProfessorEscolhido",
+              value: chosenTeacher
+            }
+          ]
       };
 
       const messageNewEvent = messageCreateNewEvent(

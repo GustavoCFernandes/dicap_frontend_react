@@ -7,6 +7,7 @@
    date,
    start,
    end,
+   chosenTeacher,
  }) {
    try {
      const response = await fetch(`${urlBackend}/create/event/calendar`, {
@@ -14,7 +15,7 @@
        headers: {
          'Content-Type': 'application/json',
        },
-       body: JSON.stringify({ type, event, responsible, date, start, end }),
+       body: JSON.stringify({ type, event, responsible, date, start, end, chosenTeacher }),
      });
 
      if (!response.ok) {
