@@ -7,78 +7,44 @@ import ButtonExitTeacherLogin from '../../components/ButtonExitTeacherLogin'
 import { listScheduledEvents } from '../../services/teachers'
 import { useEffect, useState } from 'react';
 import tippy from 'tippy.js'
+import { graphCalendar } from '../../services/graph'
+import React from 'react'
+import { DateTime } from 'luxon'
 
 export default function CalendarTeacher() {
+  const teacherId = process.env.REACT_APP_ID_MICROSFOT_AZURE;
   const { teacherLoginPrivate } = useStore();
   const [events, setEvents] = useState([]);
 
+
+  const fetchEvents = React.useCallback(async () => {
+    try {
+      const result = await graphCalendar(teacherId);
+
+      const filteredEvents = result.value.filter(event =>
+        event.singleValueExtendedProperties &&
+        event.singleValueExtendedProperties.length > 0 &&
+        event.singleValueExtendedProperties.some(prop => prop.value === teacherLoginPrivate?.name)
+      );
+
+      const mappedEvents = filteredEvents.map(event => ({
+        title: event.subject,
+        start: DateTime.fromISO(event.start?.dateTime, { zone: 'utc' }).toLocal().toISO(),
+        end: DateTime.fromISO(event.end?.dateTime, { zone: 'utc' }).toLocal().toISO(),
+      }));
+
+      setEvents(mappedEvents);
+
+    } catch (err) {
+      console.error('Erro ao buscar eventos:', err);
+    }
+  }, [teacherId, teacherLoginPrivate?.name]);
+
+
   useEffect(() => {
-    const fetchAndFilterEvents = async () => {
-      try {
-        const response = await listScheduledEvents();
-        const allEvents = response.data;
+    fetchEvents();
+  }, [fetchEvents]);
 
-        // Filtra apenas os eventos do responsável
-        const filtered = allEvents.filter(
-          (item) =>
-            item.responsible === teacherLoginPrivate?.name &&
-            item.type === 'create'
-            //&& item.event !== 'Test/Dicap Dev (SA)'
-        );
-
-        // Lista os eventos do tipo 'delete'
-          const deleteEvents = allEvents.filter(
-            (item) => item.type === 'delete'
-          );
-
-          // Função que cria uma chave única para comparação
-          const generateKey = (item) => `${item.event}_${item.date}_${item.start}_${item.end}`;
-
-          // Cria um Set com as chaves dos eventos deletados
-          const deleteKeys = new Set(deleteEvents.map(generateKey));
-
-          // Filtra os eventos 'create' que não estão na lista de deletados
-          const finalFiltered = filtered.filter(
-            (item) => !deleteKeys.has(generateKey(item))
-          );
-
-        const formatted = finalFiltered.map((item) => {
-          const [day, month, year] = item.date.split('/').map(Number);
-
-          // Função para converter hora no formato 12h com AM/PM para [hour, minute]
-          const parseTime = (timeStr: string) => {
-            const [time, modifier] = timeStr.trim().split(' ');
-            let [hours, minutes] = time.split(':').map(Number);
-
-            if (modifier?.toLowerCase() === 'pm' && hours < 12) hours += 12;
-            if (modifier?.toLowerCase() === 'am' && hours === 12) hours = 0;
-
-            return [hours, minutes];
-          };
-
-          const [startHour, startMinute] = parseTime(item.start);
-          const [endHour, endMinute] = parseTime(item.end);
-
-          const start = new Date(2000 + year, month - 1, day, startHour, startMinute); // ano 2000 + 25 = 2025
-          const end = new Date(2000 + year, month - 1, day, endHour, endMinute);
-
-          return {
-            id: item.id,
-            title: item.event,
-            start: start.toISOString(),
-            end: end.toISOString(),
-          };
-        });
-
-
-        setEvents(formatted);
-      } catch (error) {
-        console.error('Erro ao buscar eventos:', error);
-      }
-    };
-
-    fetchAndFilterEvents();
-  }, []);
 
   return (
     <div id='calendar-content' style={{ margin: '70px auto', maxWidth: '80rem' }}>

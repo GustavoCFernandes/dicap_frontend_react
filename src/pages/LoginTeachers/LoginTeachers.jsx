@@ -1,18 +1,41 @@
-import React, { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { loginTeacher } from '../../services/teachers';
 import { useNavigate } from 'react-router-dom';
 import { useStore } from '../../stores';
+import {
+  callMsGraph,
+  generetedAccessTokenGraphToBakend,
+} from '../../services/graph';
+import { useEffect, useState } from 'react';
 //import { validateEmail } from '../../utils/validateEmail';
 
 const LoginTeachers = () => {
+  const teacherId = process.env.REACT_APP_ID_MICROSFOT_AZURE;
   const navigate = useNavigate();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [emailError, setEmailError] = useState(false);
-  const { setTeacherLoginPrivate } = useStore();
+  const { setTeacherLoginPrivate, setLoading } = useStore();
+
+  function RequestProfileData() {
+    setLoading(true);
+    generetedAccessTokenGraphToBakend()
+      .then((response) => {
+        localStorage.setItem('accessToken', response.accessToken);
+        callMsGraph(response.accessToken, teacherId).then((response) => {
+          setLoading(false);
+        });
+      })
+      .catch((error) => {
+        console.error('Erro ao obter token:', error);
+      });
+  }
+
+  useEffect(() => {
+    RequestProfileData();
+  }, []);
 
   const loginMutation = useMutation({
     mutationFn: loginTeacher,
