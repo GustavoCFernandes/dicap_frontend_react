@@ -8,7 +8,7 @@ function getToken() {
 
 function getParamsGraphCalendar() {
   const today = new Date();
-  const daysDisplayed = 15
+  const daysDisplayed = 30
 
   const startOfWeek = new Date(today);
   const dayOfWeek = today.getDay();
@@ -26,7 +26,7 @@ function getParamsGraphCalendar() {
   const startDateTime = toISOStringNoMs(startOfWeek);
   const endDateTime = toISOStringNoMs(endDate);
 
-  return `?startDateTime=${startDateTime}&endDateTime=${endDateTime}&$filter=isCancelled eq false&$top=500&$expand=singleValueExtendedProperties($filter=(id eq 'String {01234567-89ab-cdef-0123-456789abcdef} Name ProfessorEscolhido'))`;
+  return `?startDateTime=${startDateTime}&endDateTime=${endDateTime}&$filter=isCancelled eq false&$top=1000&$expand=singleValueExtendedProperties($filter=(id eq 'String {01234567-89ab-cdef-0123-456789abcdef} Name ProfessorEscolhido'))`;
 }
 
 export async function generetedAccessTokenGraphToBakend() {

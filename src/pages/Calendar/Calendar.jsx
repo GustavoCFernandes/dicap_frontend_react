@@ -102,7 +102,6 @@ const Calendar = () => {
   const fetchEvents = React.useCallback(async () => {
     try {
       const events = await graphCalendar(teacherId);
-      console.log('events:', events)
 
       const normalize = (str) => str?.trim().toLowerCase();
 
@@ -157,7 +156,7 @@ const Calendar = () => {
     }
   }, [teacherId, fullNameEvent]);
 
-  useCalendarPolling(fetchEvents, 3000, [teacherId]);
+  useCalendarPolling(fetchEvents, 5000, [teacherId]);
 
   const handleCreateEvent = async () => {
     setIsSubmitting(true);
@@ -336,13 +335,6 @@ const Calendar = () => {
           ]
       };
 
-      const messageNewEvent = messageCreateNewEvent(
-        newStart,
-        newEnd,
-        fullNameEvent,
-        chosenTeacher
-      );
-
       //Extraindo data formato dd/mm/aaaa
       const _extractEventDateTime = extractEventDateTime(newStart);
 
@@ -360,6 +352,13 @@ const Calendar = () => {
         ErrorAlert('Erro ao criar evento.');
         return;
       } else {
+        const messageNewEvent = messageCreateNewEvent(
+          newStart,
+          newEnd,
+          fullNameEvent,
+          chosenTeacher,
+          eventCreate.onlineMeeting?.joinUrl
+        );
         console.log(messageNewEvent);
         try {
           await sendMessageWhatsapp(messageNewEvent, user.id_group_whatsapp);
@@ -409,6 +408,7 @@ const Calendar = () => {
       const thoHours = 180;
 
       const matching = await graphCalendar(teacherId);
+      console.log('matching handleDeleteEvent:', matching)
       const eventToDelete = matching.value.find(
         (event) => event.id === eventCalendarId
       );
@@ -435,9 +435,11 @@ const Calendar = () => {
       if (result) {
         Swal.fire({
           title: 'Deletado!',
-
-          text: 'Evento excluído com sucesso.',
+          text: 'Evento excluído com sucesso. Aguarde enquanto atualizamos sua agenda.',
           icon: 'success',
+          timer: 10000,
+          timerProgressBar: true,
+          showConfirmButton: false,
         }).then(() => {
           fetchEvents();
         });
@@ -666,6 +668,7 @@ const Calendar = () => {
 
 
             <FullCalendar
+             // remove vizuals de dias passados
               validRange={validRange}
               plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
               initialView='timeGridWeek'

@@ -22,12 +22,13 @@ export function extractEventDateTime(newStart) {
   )
 }
 
-export function messageCreateNewEvent(newStart, newEnd, fullNameEvent, teacher) {
+export function messageCreateNewEvent(newStart, newEnd, fullNameEvent, teacher, joinUrl) {
   return `${fullNameEvent} agendou uma nova aula no dia ${newStart.toFormat(
     'dd/LL/yy'
   )} das ${newStart.toLocaleString(
     DateTime.TIME_SIMPLE
-  )} às ${newEnd.toLocaleString(DateTime.TIME_SIMPLE)} com ${teacher}.`;
+  )} às ${newEnd.toLocaleString(DateTime.TIME_SIMPLE)} com ${teacher}.
+  Link para a aula: ${joinUrl ? joinUrl : 'Não disponível'}.`;
 }
 
 export function messageDeleteEvent(event) {
