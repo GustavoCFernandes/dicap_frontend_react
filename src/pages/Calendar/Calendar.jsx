@@ -28,7 +28,10 @@ import {
   graphDeleteEvent,
 } from '../../services/graph';
 import { addEventCalendar } from '../../services/eventsCalendar.js';
-import { listUnavailabilityTeachersService, createUnavailabilityTeachersService } from '../../services/teachers.js';
+import {
+  listUnavailabilityTeachersService,
+  createUnavailabilityTeachersService,
+} from '../../services/teachers.js';
 import {
   updatePointsStudent,
   updateNumberAppointmentsStudent,
@@ -57,7 +60,8 @@ import { isTimeConflict } from '../../utils/isTimeConflict.ts';
 
 const Calendar = () => {
   const teacherId = process.env.REACT_APP_ID_MICROSFOT_AZURE;
-  const indisponibilidadeJurandir = process.env.REACT_APP_INDISPONIBILIDADE_JURANDIR_MANUAL;
+  const indisponibilidadeJurandir =
+    process.env.REACT_APP_INDISPONIBILIDADE_JURANDIR_MANUAL;
   let stutentName = 'Estudante';
   let enterprise = 'Empresa';
   let fullNameEvent = '';
@@ -67,7 +71,8 @@ const Calendar = () => {
   const [tempEnd, setTempEnd] = useState('');
   const [actionType, setActionType] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [horariosIndisponiveisJurandir, setHorariosIndisponiveisJurandir] = useState([])
+  const [horariosIndisponiveisJurandir, setHorariosIndisponiveisJurandir] =
+    useState([]);
 
   const [events, setEvents] = useState([]);
   const [showCalendar, setShowCalendar] = useState(false);
@@ -80,17 +85,17 @@ const Calendar = () => {
 
   useEffect(() => {
     async function fetchListUnavailabilityTeachersService() {
-      const { data } = await listUnavailabilityTeachersService()
-      setHorariosIndisponiveisJurandir(data)
+      const { data } = await listUnavailabilityTeachersService();
+      setHorariosIndisponiveisJurandir(data);
     }
 
-    fetchListUnavailabilityTeachersService()
-  }, [])
+    fetchListUnavailabilityTeachersService();
+  }, []);
 
   let additionalEvents = [...horariosIndisponiveisJurandir];
 
   if (indisponibilidadeJurandir !== 'true') {
-    additionalEvents = []
+    additionalEvents = [];
   }
 
   if (user) {
@@ -162,7 +167,7 @@ const Calendar = () => {
     setIsSubmitting(true);
     showLoadAlert('Criando agendamento, aguarde por favor!');
     try {
-      const now = DateTime.local().plus({ hours: 2 });
+      const now = DateTime.local().plus({ hours: 3 });
       const newStart = DateTime.fromISO(newEvent.start);
       const newEnd = DateTime.fromISO(newEvent.end);
       const newStartLocal = DateTime.fromISO(newEvent.start, { zone: 'utc' });
@@ -183,7 +188,7 @@ const Calendar = () => {
 
       if (newStart < now) {
         ErrorAlert(
-          'O horário do evento deve ser agendado com pelo menos 2 horas de antecedência.'
+          'O horário do evento deve ser agendado com pelo menos 3 horas de antecedência.'
         );
         return;
       }
@@ -233,11 +238,15 @@ const Calendar = () => {
         color: 'red',
       };
 
-      const createUnavailabilityTeachers = await createUnavailabilityTeachersService({
-        ...eventDefault,
-        typeEvent: 'unavailability'
-      })
-      console.log('createUnavailabilityTeachers:', createUnavailabilityTeachers)
+      const createUnavailabilityTeachers =
+        await createUnavailabilityTeachersService({
+          ...eventDefault,
+          typeEvent: 'unavailability',
+        });
+      console.log(
+        'createUnavailabilityTeachers:',
+        createUnavailabilityTeachers
+      );
 
       //testando
       //if (true) return;
@@ -328,11 +337,11 @@ const Calendar = () => {
         isOnlineMeeting: true,
         onlineMeetingProvider: 'teamsForBusiness',
         singleValueExtendedProperties: [
-            {
-              id:"String 01234567-89ab-cdef-0123-456789abcdef Name ProfessorEscolhido",
-              value: chosenTeacher
-            }
-          ]
+          {
+            id: 'String 01234567-89ab-cdef-0123-456789abcdef Name ProfessorEscolhido',
+            value: chosenTeacher,
+          },
+        ],
       };
 
       //Extraindo data formato dd/mm/aaaa
@@ -408,7 +417,7 @@ const Calendar = () => {
       const thoHours = 180;
 
       const matching = await graphCalendar(teacherId);
-      console.log('matching handleDeleteEvent:', matching)
+      console.log('matching handleDeleteEvent:', matching);
       const eventToDelete = matching.value.find(
         (event) => event.id === eventCalendarId
       );
@@ -648,14 +657,19 @@ const Calendar = () => {
       <div>
         {showCalendar ? (
           <div>
-            <div className="calendar-header d-flex justify-content-between align-items-center mb-3">
+            <div className='calendar-header d-flex justify-content-between align-items-center mb-3'>
               <h2>Agenda</h2>
               <button
-                className="btn btn-first"
+                className='btn btn-first'
                 onClick={() => {
-                  const now = DateTime.local().set({ second: 0, millisecond: 0 });
+                  const now = DateTime.local().set({
+                    second: 0,
+                    millisecond: 0,
+                  });
                   const start = now.toFormat("yyyy-MM-dd'T'HH:mm");
-                  const end = now.plus({ minutes: 30 }).toFormat("yyyy-MM-dd'T'HH:mm");
+                  const end = now
+                    .plus({ minutes: 30 })
+                    .toFormat("yyyy-MM-dd'T'HH:mm");
 
                   setNewEvent({ subject: '', start, end });
                   setActionType('create');
@@ -664,18 +678,14 @@ const Calendar = () => {
               >
                 + Novo Evento
               </button>
-          </div>
-
+            </div>
 
             <FullCalendar
-             // remove vizuals de dias passados
+              // remove vizuals de dias passados
               validRange={validRange}
               plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
               initialView='timeGridWeek'
-              events={[
-                ...events,
-                ...additionalEvents
-              ]}
+              events={[...events, ...additionalEvents]}
               locales={allLocales}
               locale='pt-br'
               timeZone='America/Sao_Paulo'
