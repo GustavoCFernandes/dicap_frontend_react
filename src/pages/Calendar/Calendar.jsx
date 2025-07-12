@@ -83,6 +83,7 @@ const Calendar = () => {
     start: '',
     end: '',
   });
+  const [forceUpdate, setForceUpdate] = useState(false);
 
   useEffect(() => {
     async function fetchListUnavailabilityTeachersService() {
@@ -128,6 +129,9 @@ const Calendar = () => {
         };
       });
 
+      // Remove eventos temporários quando os dados reais chegarem
+      const currentEvents = Array.isArray(events) ? events.filter(event => !event.id.startsWith('temp-')) : [];
+
       const unavailableTimes = await fetchAllUnavailableTimes();
       const combinedBusySchedule = [...unavailableTimes, ...formatted];
 
@@ -144,16 +148,16 @@ const Calendar = () => {
       //setEvents(combinedBusySchedule); // agenda teams todos professores + horários indisponíveis de todos professores
       switch (typeParam) {
         case 'teams':
-          setEvents(formatted);
+          setEvents([...formatted, ...(Array.isArray(currentEvents) ? currentEvents.filter(event => event.id.startsWith('temp-')) : [])]);
           break;
         case 'indisponivel':
-          setEvents(unavailableTimes);
+          setEvents([...unavailableTimes, ...(Array.isArray(currentEvents) ? currentEvents.filter(event => event.id.startsWith('temp-')) : [])]);
           break;
         case 'teamsEindisponivel':
-          setEvents(combinedBusySchedule);
+          setEvents([...combinedBusySchedule, ...(Array.isArray(currentEvents) ? currentEvents.filter(event => event.id.startsWith('temp-')) : [])]);
           break;
         default:
-          setEvents(filtered); // Sem parâmetro ou valor desconhecido
+          setEvents([...filtered, ...(Array.isArray(currentEvents) ? currentEvents.filter(event => event.id.startsWith('temp-')) : [])]); // Sem parâmetro ou valor desconhecido
       }
 
       setShowCalendar(true);
@@ -162,7 +166,7 @@ const Calendar = () => {
     }
   }, [teacherId, fullNameEvent]);
 
-  useCalendarPolling(fetchEvents, 5000, [teacherId]);
+  useCalendarPolling(fetchEvents, 3000, [teacherId, forceUpdate]);
 
   const handleCreateEvent = async () => {
     setIsSubmitting(true);
@@ -194,7 +198,7 @@ const Calendar = () => {
         return;
       }
 
-      const isConflictWithBusySchedule = events.some((e) => {
+      const isConflictWithBusySchedule = Array.isArray(events) && events.some((e) => {
         const existingStart = DateTime.fromISO(e.start, { zone: 'utc' });
         const existingEnd = DateTime.fromISO(e.end, { zone: 'utc' });
 
@@ -379,6 +383,20 @@ const Calendar = () => {
         //}
       }
 
+      // Adiciona o evento localmente para atualização imediata
+      const newEventLocal = {
+        id: eventCreate.id || `temp-${Date.now()}`,
+        title: fullNameEvent,
+        start: newStart.toISO(),
+        end: newEnd.toISO(),
+        backgroundColor: '#ffd700', // Cor dourada para indicar evento temporário
+        borderColor: '#ffd700',
+        textColor: '#000',
+      };
+
+      // Atualiza o estado local imediatamente
+      setEvents(prevEvents => [...prevEvents, newEventLocal]);
+
       const newPoints = user.points - pointsToDeduct;
       // Atualiza os pontos do estudante
       await updatePointsStudent({ userId: user.id, points: newPoints });
@@ -396,8 +414,31 @@ const Calendar = () => {
 
       setShowModal(false);
       setNewEvent({ subject: '', start: '', end: '' });
-      fetchEvents();
+
+      // Atualização imediata dos eventos
       hideLoadAlert();
+      showLoadAlert('Atualizando agenda...');
+
+      // Aguarda um pouco para garantir que o evento foi criado no servidor
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      // Força atualização imediata
+      await fetchEvents();
+
+      // Reseta o forceUpdate para evitar atualizações desnecessárias
+      setForceUpdate(prev => !prev);
+
+      hideLoadAlert();
+
+      // Mostra confirmação de sucesso
+      Swal.fire({
+        title: 'Agendamento criado com sucesso!',
+        text: 'Seu evento foi adicionado à agenda.',
+        icon: 'success',
+        timer: 3000,
+        timerProgressBar: true,
+        showConfirmButton: false,
+      });
     } catch (err) {
       ErrorAlert('Erro ao criar evento.');
       console.error(err);
@@ -415,9 +456,21 @@ const Calendar = () => {
 
       const matching = await graphCalendar(teacherId);
       //console.log('matching handleDeleteEvent:', matching);
+
+      // Verifica se matching e matching.value existem
+      if (!matching || !matching.value || !Array.isArray(matching.value)) {
+        ErrorAlert('Erro ao buscar dados do evento.');
+        return;
+      }
+
       const eventToDelete = matching.value.find(
         (event) => event.id === eventCalendarId
       );
+
+      if (!eventToDelete) {
+        ErrorAlert('Evento não encontrado.');
+        return;
+      }
 
       const newPointsDelete = calculateEventPoints(eventToDelete);
       const userNewPointsDelete = user.points + newPointsDelete;
@@ -426,13 +479,15 @@ const Calendar = () => {
         points: userNewPointsDelete,
       });
 
-      if (!eventToDelete) {
-        ErrorAlert('Evento não encontrado.');
+      // Verificação de 2 horas de antecedência para deletar
+      const now = DateTime.local();
+
+      // Verifica se o evento tem as propriedades necessárias
+      if (!eventToDelete.start || !eventToDelete.start.dateTime) {
+        ErrorAlert('Dados do evento incompletos.');
         return;
       }
 
-      // Verificação de 2 horas de antecedência para deletar
-      const now = DateTime.local();
       const eventStart = DateTime.fromISO(eventToDelete.start.dateTime);
       const diffInMinutes = eventStart.diff(now, 'minutes').minutes;
 
@@ -474,6 +529,12 @@ const Calendar = () => {
             setUser({ ...user, points: userNewPointsDelete });
           });
 
+        // Verifica se o evento tem todas as propriedades necessárias para extração
+        if (!eventToDelete.start?.dateTime || !eventToDelete.end?.dateTime || !eventToDelete.subject) {
+          ErrorAlert('Dados do evento incompletos para processamento.');
+          return;
+        }
+
         const dataTimesFormated = extractEventTimeDelete(eventToDelete);
 
         const deleteMsg = messageDeleteEvent(eventToDelete);
@@ -502,6 +563,9 @@ const Calendar = () => {
             );
           }
         }
+
+        // Força atualização imediata após deletar
+        setForceUpdate(prev => !prev);
       }
     } catch (error) {
       console.error(error);
