@@ -13,6 +13,9 @@ import Loader from './components/Loader';
 import { useStore } from './stores/index';
 import NotFound from './pages/NotFound';
 import CalendarTeacher from './pages/CalendarTeacher/CalendarTeacher.tsx';
+import Maintenance from './components/Maintenance';
+
+const maintenance = process.env.REACT_APP_SITE_MAINTENANCE;
 
 const AppRoutes = () => {
   return (
@@ -50,9 +53,7 @@ const AppRoutes = () => {
 
       <Route
         path='/atualizar/senha/email'
-        element={
-            <UpdatePassword toEmail="true" />
-        }
+        element={<UpdatePassword toEmail='true' />}
       />
     </Routes>
   );
@@ -70,11 +71,11 @@ const MainContent = () => {
 };
 
 export default function App() {
+  const maintenance = process.env.REACT_APP_SITE_MAINTENANCE === 'true';
+
   return (
     <Router>
-      <PageLayout>
-        <MainContent />
-      </PageLayout>
+      <PageLayout>{maintenance ? <Maintenance /> : <MainContent />}</PageLayout>
     </Router>
   );
 }
