@@ -55,19 +55,19 @@ export async function generetedAccessTokenGraphToBakend() {
 }
 
 export async function callMsGraph(accessToken, userId) {
-    const headers = new Headers();
-    const bearer = `Bearer ${accessToken}`;
+  const headers = new Headers();
+  const bearer = `Bearer ${accessToken}`;
 
-    headers.append("Authorization", bearer);
+  headers.append('Authorization', bearer);
 
-    const options = {
-        method: "GET",
-        headers: headers
-    };
+  const options = {
+    method: 'GET',
+    headers: headers,
+  };
 
-    return fetch(graphApplicationConfig.user(userId), options)
-      .then((response) => response.json())
-      .catch((error) => console.log(error));
+  return fetch(graphApplicationConfig.user(userId), options)
+    .then((response) => response.json())
+    .catch((error) => console.log(error));
 }
 
 export async function graphCalendar(teacherId) {
@@ -90,7 +90,7 @@ export async function graphCalendar(teacherId) {
 }
 
 export async function graphCreateEvent(eventCalendar, teacherId) {
-  console.log('eventCalendar:', eventCalendar)
+  //console.log('eventCalendar:', eventCalendar)
   const accessToken = getToken();
 
   const response = await fetch(

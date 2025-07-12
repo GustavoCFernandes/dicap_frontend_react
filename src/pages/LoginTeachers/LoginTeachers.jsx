@@ -42,7 +42,7 @@ const LoginTeachers = () => {
     onSuccess: (response) => {
       if (response?.user) {
         localStorage.setItem('token-teacher-login', response.token);
-        setTeacherLoginPrivate(response?.user)
+        setTeacherLoginPrivate(response?.user);
       }
 
       if (response?.auth) {
@@ -112,9 +112,7 @@ const LoginTeachers = () => {
           </button>
         </div>
 
-        {emailError && (
-          <p className='text-danger'>Digite um e-mail válido.</p>
-        )}
+        {emailError && <p className='text-danger'>Digite um e-mail válido.</p>}
 
         {loginMutation.isError && (
           <p className='text-danger'>Login e senha inválidos.</p>
@@ -122,7 +120,9 @@ const LoginTeachers = () => {
 
         <div className='btn-login'>
           <button type='submit' disabled={loginMutation.isPending}>
-            <strong>{loginMutation.isPending ? 'Entrando...' : 'Entrar'}</strong>
+            <strong>
+              {loginMutation.isPending ? 'Entrando...' : 'Entrar'}
+            </strong>
           </button>
         </div>
       </form>

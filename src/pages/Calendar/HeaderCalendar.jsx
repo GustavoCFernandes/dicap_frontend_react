@@ -1,9 +1,8 @@
-import React from 'react';
 import { convertPointsToHours } from '../../utils/convertPointsToHours.ts';
 import { useStore } from '../../stores/index';
 
 const HeaderCalendar = (props) => {
-  const { user } = useStore();
+  const user = useStore((state) => state.user);
 
   return (
     <div

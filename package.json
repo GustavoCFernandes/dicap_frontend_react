@@ -24,6 +24,7 @@
         "sweetalert2": "^11.19.1",
         "tippy.js": "^6.3.7",
         "web-vitals": "^2.1.4",
+        "zukeeper": "^1.0.2",
         "zustand": "^5.0.3"
     },
     "devDependencies": {

@@ -57,6 +57,7 @@ import {
   fetchAllUnavailableTimesByName,
 } from '../../utils/filterTeachersUnavailableTimes.ts';
 import { isTimeConflict } from '../../utils/isTimeConflict.ts';
+import { calculateEventPoints } from '../../utils/calculateEventPoints.ts';
 
 const Calendar = () => {
   const teacherId = process.env.REACT_APP_ID_MICROSFOT_AZURE;
@@ -223,7 +224,7 @@ const Calendar = () => {
         return;
       }
 
-      console.log('Professor escolhido:', chosenTeacher);
+      //console.log('Professor escolhido:', chosenTeacher);
 
       if (isConflictWithBusySchedule) {
         ErrorAlert('Este horário já está ocupado.');
@@ -243,10 +244,6 @@ const Calendar = () => {
           ...eventDefault,
           typeEvent: 'unavailability',
         });
-      console.log(
-        'createUnavailabilityTeachers:',
-        createUnavailabilityTeachers
-      );
 
       //testando
       //if (true) return;
@@ -417,10 +414,17 @@ const Calendar = () => {
       const thoHours = 180;
 
       const matching = await graphCalendar(teacherId);
-      console.log('matching handleDeleteEvent:', matching);
+      //console.log('matching handleDeleteEvent:', matching);
       const eventToDelete = matching.value.find(
         (event) => event.id === eventCalendarId
       );
+
+      const newPointsDelete = calculateEventPoints(eventToDelete);
+      const userNewPointsDelete = user.points + newPointsDelete;
+      await updatePointsStudent({
+        userId: user.id,
+        points: userNewPointsDelete,
+      });
 
       if (!eventToDelete) {
         ErrorAlert('Evento não encontrado.');
@@ -458,18 +462,23 @@ const Calendar = () => {
         await updateNumberAppointmentsStudent({
           userId: user.id,
           number_appointments: removeNewNumberAppointments,
-        }).then(() => {
-          setUser({
-            ...user,
-            number_appointments: removeNewNumberAppointments,
+        })
+          .then(() => {
+            setUser({
+              ...user,
+              number_appointments: removeNewNumberAppointments,
+              points: userNewPointsDelete,
+            });
+          })
+          .catch(() => {
+            setUser({ ...user, points: userNewPointsDelete });
           });
-        });
 
         const dataTimesFormated = extractEventTimeDelete(eventToDelete);
 
         const deleteMsg = messageDeleteEvent(eventToDelete);
         if (deleteMsg) {
-          console.log('deleteMsg', deleteMsg);
+          //console.log('deleteMsg', deleteMsg);
           await addEventCalendar({
             type: 'delete',
             event: fullNameEvent,
