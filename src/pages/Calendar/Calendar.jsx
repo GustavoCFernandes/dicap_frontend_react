@@ -85,7 +85,16 @@ const Calendar = () => {
   });
   const [forceUpdate, setForceUpdate] = useState(false);
 
+  function alertInit() {
+    Swal.fire({
+      title: 'Olá, aluno!',
+      text: 'Antes de iniciar o agendamento, é importante lembrar que só é possível criar ou excluir um agendamento com pelo menos 3 horas de antecedência.',
+      icon: 'info',
+    });
+  }
+
   useEffect(() => {
+    alertInit()
     async function fetchListUnavailabilityTeachersService() {
       const { data } = await listUnavailabilityTeachersService();
       setHorariosIndisponiveisJurandir(data);
