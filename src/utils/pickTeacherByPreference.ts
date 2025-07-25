@@ -8,22 +8,28 @@ export function filterByName(array: NamedItem[], name: string): NamedItem[] {
 export function pickTeacherByPreference(
   preferences: TeacherPreference[]
 ): string | undefined {
-  const totalWeight = preferences.reduce(
+  // Remove professores com preferência <= 0
+  const validPreferences = preferences.filter((item) => item.preference > 0);
+
+  if (validPreferences.length === 0) return undefined;
+
+  const totalWeight = validPreferences.reduce(
     (sum, item) => sum + item.preference,
     0
   );
   const randomValue = Math.random() * totalWeight;
 
   let cumulativeWeight = 0;
-  for (const item of preferences) {
+  for (const item of validPreferences) {
     cumulativeWeight += item.preference;
     if (randomValue <= cumulativeWeight) {
       return item.name;
     }
   }
 
-  return undefined; // in case preferences is empty
+  return undefined;
 }
+
 
 export function pickTeacherExcludingName(
   preferences: TeacherPreference[],
@@ -31,8 +37,9 @@ export function pickTeacherExcludingName(
 ): string | undefined {
   // Filtra os professores que não devem ser excluídos
   const filteredPreferences = preferences.filter(
-    (item) => item.name !== nameToExclude
+    (item) => item.name !== nameToExclude && item.preference > 0
   );
+
 
   if (filteredPreferences.length === 0) return undefined;
 

@@ -233,11 +233,13 @@ const Calendar = () => {
       );
 
       if (!chosenTeacher) {
-        console.log('Nenhum professor disponível nesse horário.');
+        const notChosenTeacher = 'Não foi possível encontrar um professor disponível.';
+        ErrorAlert(notChosenTeacher);
+        console.log(notChosenTeacher);
         return;
       }
 
-      //console.log('Professor escolhido:', chosenTeacher);
+      console.log('Professor escolhido:', chosenTeacher);
 
       if (isConflictWithBusySchedule) {
         ErrorAlert('Este horário já está ocupado.');
@@ -252,14 +254,15 @@ const Calendar = () => {
         color: 'red',
       };
 
+      //testando
+      /*hideLoadAlert();
+      if (true) return;*/
+
       const createUnavailabilityTeachers =
         await createUnavailabilityTeachersService({
           ...eventDefault,
           typeEvent: 'unavailability',
         });
-
-      //testando
-      //if (true) return;
 
       // Verifica se o horário conflita com os horários indisponíveis do professor
       const isUnavailable = teacherUnavailableTimes?.some((time) => {
@@ -578,7 +581,7 @@ const Calendar = () => {
       }
     } catch (error) {
       console.error(error);
-      ErrorAlert('Erro ao excluir evento.');
+      ErrorAlert('Erro ao excluir evento, Tente novamente.');
     }
   };
 
